@@ -14,6 +14,7 @@ import { Calendar, DollarSign, MapPin, Star, User, Search, MessageSquare, Clock 
 
 const WorkerDashboard: React.FC = () => {
   const { user } = useAuth();
+  const [activeChatUserId, setActiveChatUserId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [isAvailable, setIsAvailable] = useState(true);
 
@@ -85,12 +86,13 @@ const WorkerDashboard: React.FC = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="available">Available Jobs</TabsTrigger>
             <TabsTrigger value="applications">My Applications</TabsTrigger>
             <TabsTrigger value="active">Active Jobs</TabsTrigger>
             <TabsTrigger value="completed">Completed</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}

@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import ChatWindow from '@/components/chat/ChatWindow';
 import Layout from '@/components/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 import { getJobsByClientId, mockJobs, mockApplications, getUserById, getApplicationsByJobId, Client } from '@/data/mockData';
@@ -13,6 +14,7 @@ import { Calendar, DollarSign, MapPin, Clock, User, Plus, MessageSquare } from '
 const ClientDashboard: React.FC = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
+  const [activeChatUserId, setActiveChatUserId] = useState<string | null>(null);
 
   if (!user || user.type !== 'client') {
     return <div>Access denied</div>;
@@ -56,11 +58,12 @@ const ClientDashboard: React.FC = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="active">Active Jobs</TabsTrigger>
             <TabsTrigger value="completed">Completed</TabsTrigger>
             <TabsTrigger value="applications">Applications</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -386,6 +389,38 @@ const ClientDashboard: React.FC = () => {
                   </Card>
                 );
               })}
+            </div>
+          </TabsContent>
+
+          {/* Messages Tab */}
+          <TabsContent value="messages" className="space-y-6">
+            <div className="flex flex-col lg:flex-row gap-6">
+              <div className="flex-1">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <MessageSquare className="w-5 h-5" />
+                      <span>Messages</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {activeChatUserId ? (
+                      <ChatWindow 
+                        recipientId={activeChatUserId}
+                        onClose={() => setActiveChatUserId(null)}
+                      />
+                    ) : (
+                      <div className="text-center py-8">
+                        <MessageSquare className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                        <h3 className="text-lg font-medium">No active conversation</h3>
+                        <p className="text-muted-foreground">
+                          Click "Chat" on any worker profile to start messaging
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </TabsContent>
         </Tabs>

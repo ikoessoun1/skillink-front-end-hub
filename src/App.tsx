@@ -9,6 +9,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ClientDashboard from "./pages/ClientDashboard";
 import WorkerDashboard from "./pages/WorkerDashboard";
+import Messages from "./pages/Messages";
+import DebugInfo from "./pages/DebugInfo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +28,8 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/client-dashboard" element={<ClientDashboard />} />
             <Route path="/worker-dashboard" element={<WorkerDashboard />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/debug" element={<DebugInfo />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
