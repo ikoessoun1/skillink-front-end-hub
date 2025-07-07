@@ -12,6 +12,12 @@ import WorkerDashboard from "./pages/WorkerDashboard";
 import Messages from "./pages/Messages";
 import DebugInfo from "./pages/DebugInfo";
 import NotFound from "./pages/NotFound";
+import BrowseJobs from "./pages/BrowseJobs";
+import FindWorkers from "./pages/FindWorkers";
+import PostJob from "./pages/PostJob";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
+import HowItWorks from "./pages/HowItWorks";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +36,18 @@ const App = () => (
             <Route path="/worker-dashboard" element={<WorkerDashboard />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/debug" element={<DebugInfo />} />
+            <Route path="/browse-jobs" element={<BrowseJobs />} />
+            <Route path="/find-workers" element={<FindWorkers />} />
+            <Route path="/post-job" element={<PostJob />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
+            <Route path="/about" element={<HowItWorks />} />
+            <Route path="/privacy" element={<HowItWorks />} />
+            <Route path="/terms" element={<HowItWorks />} />
+            <Route path="/worker-resources" element={<BrowseJobs />} />
+            <Route path="/worker-support" element={<Settings />} />
+            <Route path="/client-support" element={<Settings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
