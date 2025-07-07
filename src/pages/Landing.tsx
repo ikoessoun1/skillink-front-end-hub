@@ -26,21 +26,21 @@ const Landing: React.FC = () => {
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
             <div className="max-w-3xl">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
-                Connect with Skilled
-                <span className="block text-secondary">Laborers Near You</span>
+                Need Work Done?
+                <span className="block text-secondary">Find Local Workers</span>
               </h1>
               <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90 animate-fade-in">
-                Find trusted professionals for your projects or showcase your skills to find work.
+                Simple. Fast. Trusted. Connect with skilled workers in your area.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 animate-scale-in">
                 <Button size="lg" variant="secondary" asChild>
-                  <Link to="/register">
-                    Get Started Free
+                  <Link to="/register?type=client">
+                    I Need Work Done
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="border-white/80 text-white hover:bg-white hover:text-primary bg-transparent" asChild>
-                  <Link to="/find-workers">
-                    Find Workers
+                  <Link to="/register?type=worker">
+                    I Want to Work
                   </Link>
                 </Button>
               </div>
@@ -57,10 +57,10 @@ const Landing: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Browse by Category
+              What Do You Need Help With?
             </h2>
             <p className="text-xl text-muted-foreground">
-              Find the right professional for your specific needs
+              Click on what you need done
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -196,15 +196,15 @@ const Landing: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" asChild>
-              <Link to="/register">
+              <Link to="/register?type=worker">
                 <User className="w-5 h-5 mr-2" />
-                Join as Worker
+                I Want to Work
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="border-white/80 text-white hover:bg-white hover:text-primary bg-transparent" asChild>
-              <Link to="/register">
+              <Link to="/register?type=client">
                 <Search className="w-5 h-5 mr-2" />
-                Hire Workers
+                I Need Work Done
               </Link>
             </Button>
           </div>

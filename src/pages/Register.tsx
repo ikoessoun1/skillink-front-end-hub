@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,7 +14,12 @@ import { serviceCategories } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
 
 const Register: React.FC = () => {
-  const [userType, setUserType] = useState<'client' | 'worker'>('client');
+  const location = useLocation();
+  const [userType, setUserType] = useState<'client' | 'worker'>(() => {
+    const params = new URLSearchParams(location.search);
+    const typeParam = params.get('type');
+    return (typeParam === 'worker' || typeParam === 'client') ? typeParam : 'client';
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -23,7 +28,7 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [location, setLocation] = useState('');
+  const [userLocation, setUserLocation] = useState('');
 
   // Client fields
   const [company, setCompany] = useState('');
@@ -49,7 +54,7 @@ const Register: React.FC = () => {
         password,
         userType,
         phone,
-        location,
+        location: userLocation,
         ...(userType === 'client' 
           ? { company }
           : { 
@@ -88,24 +93,27 @@ const Register: React.FC = () => {
                 <span className="text-white font-bold text-xl">S</span>
               </div>
             </div>
-            <h2 className="text-3xl font-bold text-foreground">Join SkillLink</h2>
+            <h2 className="text-3xl font-bold text-foreground">Get Started</h2>
             <p className="mt-2 text-muted-foreground">
-              Create your account to get started
+              {userType === 'client' ? 'Find workers for your projects' : 'Start earning money with your skills'}
             </p>
           </div>
 
           <Card className="shadow-card">
             <CardHeader>
-              <CardTitle>Sign Up</CardTitle>
+              <CardTitle>{userType === 'client' ? 'I Need Work Done' : 'I Want to Work'}</CardTitle>
               <CardDescription>
-                Choose your account type and fill in your details
+                {userType === 'client' 
+                  ? 'Tell us about yourself so workers can contact you' 
+                  : 'Create your worker profile to start getting jobs'
+                }
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs value={userType} onValueChange={(value) => setUserType(value as 'client' | 'worker')}>
                 <TabsList className="grid w-full grid-cols-2 mb-6">
-                  <TabsTrigger value="client">I need work done</TabsTrigger>
-                  <TabsTrigger value="worker">I do the work</TabsTrigger>
+                  <TabsTrigger value="client">I Need Work Done</TabsTrigger>
+                  <TabsTrigger value="worker">I Want to Work</TabsTrigger>
                 </TabsList>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -169,8 +177,8 @@ const Register: React.FC = () => {
                     <Input
                       id="location"
                       type="text"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
+                      value={userLocation}
+                      onChange={(e) => setUserLocation(e.target.value)}
                       required
                       placeholder="Enter your city, state"
                     />

@@ -22,6 +22,7 @@ export interface Worker extends User {
   availability: 'available' | 'busy' | 'offline';
   bio: string;
   certifications: string[];
+  portfolioImages?: string[];
 }
 
 export interface Client extends User {
@@ -96,7 +97,12 @@ export const mockWorkers: Worker[] = [
     totalJobs: 127,
     availability: 'available',
     bio: 'Experienced carpenter specializing in residential and commercial projects. Quality craftsmanship guaranteed.',
-    certifications: ['OSHA 10', 'Lead-Safe Certified']
+    certifications: ['OSHA 10', 'Lead-Safe Certified'],
+    portfolioImages: [
+      'https://images.unsplash.com/photo-1604709177225-055f99402ea3?w=400',
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
+      'https://images.unsplash.com/photo-1503387837-b154d5074bd2?w=400'
+    ]
   },
   {
     id: 'w2',
@@ -115,7 +121,12 @@ export const mockWorkers: Worker[] = [
     totalJobs: 89,
     availability: 'available',
     bio: 'Licensed electrician with expertise in residential and commercial electrical systems.',
-    certifications: ['Master Electrician License', 'Solar Installation Certified']
+    certifications: ['Master Electrician License', 'Solar Installation Certified'],
+    portfolioImages: [
+      'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400',
+      'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400',
+      'https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=400'
+    ]
   },
   {
     id: 'w3',
@@ -134,7 +145,12 @@ export const mockWorkers: Worker[] = [
     totalJobs: 156,
     availability: 'busy',
     bio: 'Reliable plumber offering 24/7 emergency services and quality repairs.',
-    certifications: ['Journeyman Plumber', 'Backflow Prevention Certified']
+    certifications: ['Journeyman Plumber', 'Backflow Prevention Certified'],
+    portfolioImages: [
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400',
+      'https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=400',
+      'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?w=400'
+    ]
   },
   {
     id: 'w4',
@@ -153,7 +169,12 @@ export const mockWorkers: Worker[] = [
     totalJobs: 78,
     availability: 'available',
     bio: 'Skilled mason specializing in both traditional and modern masonry techniques.',
-    certifications: ['NCCER Certified', 'Historic Preservation Specialist']
+    certifications: ['NCCER Certified', 'Historic Preservation Specialist'],
+    portfolioImages: [
+      'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400',
+      'https://images.unsplash.com/photo-1494526585095-c41746248156?w=400',
+      'https://images.unsplash.com/photo-1604079628040-94301bb21b91?w=400'
+    ]
   },
   {
     id: 'w5',
@@ -172,7 +193,12 @@ export const mockWorkers: Worker[] = [
     totalJobs: 45,
     availability: 'available',
     bio: 'Professional painter with an eye for detail and color matching expertise.',
-    certifications: ['EPA RRP Certified', 'Sherwin Williams Certified']
+    certifications: ['EPA RRP Certified', 'Sherwin Williams Certified'],
+    portfolioImages: [
+      'https://images.unsplash.com/photo-1520637736862-4d197d17c89a?w=400',
+      'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=400',
+      'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400'
+    ]
   }
 ];
 

@@ -211,9 +211,30 @@ const Profile: React.FC = () => {
 
             <TabsContent value="portfolio">
               <Card>
-                <CardContent className="text-center py-12">
-                  <h3 className="text-lg font-medium text-muted-foreground">Portfolio Coming Soon</h3>
-                  <p className="text-muted-foreground">Showcase your best work here</p>
+                <CardHeader>
+                  <CardTitle>My Work</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {isWorker && (user as any).portfolioImages && (user as any).portfolioImages.length > 0 ? (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {(user as any).portfolioImages.map((image: string, index: number) => (
+                        <div key={index} className="aspect-square rounded-lg overflow-hidden">
+                          <img 
+                            src={image} 
+                            alt={`Work sample ${index + 1}`}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <h3 className="text-lg font-medium text-muted-foreground">No work samples yet</h3>
+                      <p className="text-muted-foreground">
+                        {isWorker ? 'Upload photos of your work to showcase your skills' : 'This section shows worker portfolios'}
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>

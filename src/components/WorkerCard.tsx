@@ -94,11 +94,11 @@ const WorkerCard: React.FC<WorkerCardProps> = ({ worker }) => {
         </div>
 
         <div className="flex space-x-2">
-          <Button className="flex-1">
-            View Profile
+          <Button className="flex-1" size="sm">
+            Send Message
           </Button>
-          <Button variant="outline" size="icon">
-            <MessageCircle className="w-4 h-4" />
+          <Button variant="outline" size="sm" className="flex-1">
+            View Profile
           </Button>
         </div>
       </CardContent>

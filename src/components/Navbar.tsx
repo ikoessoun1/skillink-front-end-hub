@@ -33,14 +33,18 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/browse-jobs" className="text-muted-foreground hover:text-foreground transition-colors">
-              Browse Jobs
-            </Link>
-            <Link to="/find-workers" className="text-muted-foreground hover:text-foreground transition-colors">
-              Find Workers
-            </Link>
+            {isAuthenticated && user?.type === 'client' && (
+              <Link to="/find-workers" className="text-muted-foreground hover:text-foreground transition-colors">
+                Find Workers
+              </Link>
+            )}
+            {isAuthenticated && user?.type === 'worker' && (
+              <Link to="/browse-jobs" className="text-muted-foreground hover:text-foreground transition-colors">
+                Find Jobs
+              </Link>
+            )}
             <Link to="/how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">
-              How It Works
+              Help
             </Link>
           </div>
 

@@ -63,10 +63,10 @@ const WorkerDashboard: React.FC = () => {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
-                Welcome back, {worker.name}!
+                Hello, {worker.name}!
               </h1>
               <p className="text-muted-foreground">
-                {worker.category} • {worker.location}
+                Check for new job requests and manage your work
               </p>
             </div>
             <div className="flex items-center space-x-4">

@@ -42,7 +42,7 @@ const FindWorkers: React.FC = () => {
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground">Find Workers</h1>
             <p className="text-muted-foreground mt-2">
-              Connect with skilled professionals for your projects
+              Browse workers by location, rating, and what they do
             </p>
           </div>
 
@@ -51,20 +51,20 @@ const FindWorkers: React.FC = () => {
               <TabsList>
                 <TabsTrigger value="grid" className="flex items-center space-x-2">
                   <Grid className="w-4 h-4" />
-                  <span>Grid View</span>
+                  <span>Worker Profiles</span>
                 </TabsTrigger>
                 <TabsTrigger value="feed" className="flex items-center space-x-2">
                   <Users className="w-4 h-4" />
-                  <span>Portfolio Feed</span>
+                  <span>See Their Work</span>
                 </TabsTrigger>
               </TabsList>
 
-              {/* Filters */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Simple Filters */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search workers..."
+                    placeholder="Search by name or location..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10"
@@ -73,10 +73,10 @@ const FindWorkers: React.FC = () => {
                 
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Category" />
+                    <SelectValue placeholder="What do you need?" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="all">All Types of Work</SelectItem>
                     {serviceCategories.map(category => (
                       <SelectItem key={category.id} value={category.name}>
                         {category.name}
@@ -87,28 +87,19 @@ const FindWorkers: React.FC = () => {
 
                 <Select value={selectedAvailability} onValueChange={setSelectedAvailability}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Availability" />
+                    <SelectValue placeholder="When available?" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Availability</SelectItem>
-                    <SelectItem value="available">Available</SelectItem>
-                    <SelectItem value="busy">Busy</SelectItem>
-                    <SelectItem value="offline">Offline</SelectItem>
+                    <SelectItem value="all">Anytime</SelectItem>
+                    <SelectItem value="available">Available Now</SelectItem>
+                    <SelectItem value="busy">Busy (Later)</SelectItem>
                   </SelectContent>
                 </Select>
-
-                <Button variant="outline" onClick={() => {
-                  setSearchTerm('');
-                  setSelectedCategory('all');
-                  setSelectedAvailability('all');
-                }}>
-                  Clear
-                </Button>
               </div>
             </div>
 
             <TabsContent value="grid">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                 {filteredWorkers.map(worker => (
                   <WorkerCard key={worker.id} worker={worker} />
                 ))}
@@ -118,7 +109,7 @@ const FindWorkers: React.FC = () => {
                 <Card>
                   <CardContent className="text-center py-12">
                     <h3 className="text-lg font-medium text-muted-foreground">No workers found</h3>
-                    <p className="text-muted-foreground">Try adjusting your filters</p>
+                    <p className="text-muted-foreground">Try different search terms</p>
                   </CardContent>
                 </Card>
               )}
