@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import WorkerCard from '@/components/WorkerCard';
 import WorkerFeed from '@/components/WorkerFeed';
@@ -11,9 +12,19 @@ import { Search, Grid, Users } from 'lucide-react';
 import { mockWorkers, serviceCategories } from '@/data/mockData';
 
 const FindWorkers: React.FC = () => {
+  const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedAvailability, setSelectedAvailability] = useState('all');
+
+  // Handle category from URL parameter
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const categoryParam = params.get('category');
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+  }, [location.search]);
 
   const filteredWorkers = mockWorkers.filter(worker => {
     const matchesSearch = worker.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -38,7 +38,7 @@ const Landing: React.FC = () => {
                     Get Started Free
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary" asChild>
+                <Button size="lg" variant="outline" className="border-white/80 text-white hover:bg-white hover:text-primary bg-transparent" asChild>
                   <Link to="/find-workers">
                     Find Workers
                   </Link>
@@ -65,17 +65,19 @@ const Landing: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {serviceCategories.map((category) => (
-              <Card key={category.id} className="hover:shadow-hover transition-all duration-300 cursor-pointer group">
-                <CardHeader className="text-center pb-2">
-                  <div className="text-4xl mb-2 group-hover:scale-110 transition-transform">
-                    {category.icon}
-                  </div>
-                  <CardTitle className="text-lg">{category.name}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <CardDescription>{category.description}</CardDescription>
-                </CardContent>
-              </Card>
+              <Link key={category.id} to={`/find-workers?category=${encodeURIComponent(category.name)}`}>
+                <Card className="hover:shadow-hover transition-all duration-300 cursor-pointer group h-full">
+                  <CardHeader className="text-center pb-2">
+                    <div className="text-4xl mb-2 group-hover:scale-110 transition-transform">
+                      {category.icon}
+                    </div>
+                    <CardTitle className="text-lg">{category.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <CardDescription>{category.description}</CardDescription>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>
@@ -199,7 +201,7 @@ const Landing: React.FC = () => {
                 Join as Worker
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary" asChild>
+            <Button size="lg" variant="outline" className="border-white/80 text-white hover:bg-white hover:text-primary bg-transparent" asChild>
               <Link to="/register">
                 <Search className="w-5 h-5 mr-2" />
                 Hire Workers
