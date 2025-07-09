@@ -33,11 +33,9 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
-            {isAuthenticated && user?.type === 'client' && (
-              <Link to="/find-workers" className="text-muted-foreground hover:text-foreground transition-colors">
-                Find Workers
-              </Link>
-            )}
+            <Link to="/find-workers" className="text-muted-foreground hover:text-foreground transition-colors">
+              Find Workers
+            </Link>
             {isAuthenticated && user?.type === 'worker' && (
               <Link to="/browse-jobs" className="text-muted-foreground hover:text-foreground transition-colors">
                 Find Jobs

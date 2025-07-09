@@ -1,16 +1,55 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MapPin, Star, Clock, MessageCircle } from 'lucide-react';
 import { Worker } from '@/data/mockData';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface WorkerCardProps {
   worker: Worker;
 }
 
 const WorkerCard: React.FC<WorkerCardProps> = ({ worker }) => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const { toast } = useToast();
+
+  const handleSendMessage = (worker: Worker) => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Login Required",
+        description: "Please sign up or login to send messages to workers.",
+        action: (
+          <Button variant="outline" size="sm" onClick={() => navigate('/register?type=client')}>
+            Sign Up
+          </Button>
+        ),
+      });
+      return;
+    }
+    navigate('/messages');
+  };
+
+  const handleViewProfile = (worker: Worker) => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Login Required", 
+        description: "Please sign up or login to view worker profiles.",
+        action: (
+          <Button variant="outline" size="sm" onClick={() => navigate('/register?type=client')}>
+            Sign Up
+          </Button>
+        ),
+      });
+      return;
+    }
+    navigate('/profile');
+  };
+
   const getAvailabilityColor = (availability: string) => {
     switch (availability) {
       case 'available': return 'default';
@@ -94,10 +133,10 @@ const WorkerCard: React.FC<WorkerCardProps> = ({ worker }) => {
         </div>
 
         <div className="flex space-x-2">
-          <Button className="flex-1" size="sm">
+          <Button className="flex-1" size="sm" onClick={() => handleSendMessage(worker)}>
             Send Message
           </Button>
-          <Button variant="outline" size="sm" className="flex-1">
+          <Button variant="outline" size="sm" className="flex-1" onClick={() => handleViewProfile(worker)}>
             View Profile
           </Button>
         </div>

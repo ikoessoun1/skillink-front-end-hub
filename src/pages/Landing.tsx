@@ -26,16 +26,16 @@ const Landing: React.FC = () => {
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
             <div className="max-w-3xl">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
-                Need Work Done?
-                <span className="block text-secondary">Find Local Workers</span>
+                Find Workers
+                <span className="block text-secondary">Get Work Done Today</span>
               </h1>
               <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90 animate-fade-in">
-                Simple. Fast. Trusted. Connect with skilled workers in your area.
+                Browse skilled workers near you. No signup required to start looking.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 animate-scale-in">
                 <Button size="lg" variant="secondary" asChild>
-                  <Link to="/register?type=client">
-                    I Need Work Done
+                  <Link to="/find-workers">
+                    Browse Workers Now
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="border-white/80 text-white hover:bg-white hover:text-primary bg-transparent" asChild>
