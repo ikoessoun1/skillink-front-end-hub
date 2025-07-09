@@ -23,6 +23,7 @@ export interface Worker extends User {
   bio: string;
   certifications: string[];
   portfolioImages?: string[];
+  workshopImages?: string[];
 }
 
 export interface Client extends User {
@@ -102,6 +103,11 @@ export const mockWorkers: Worker[] = [
       'https://images.unsplash.com/photo-1604709177225-055f99402ea3?w=400',
       'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
       'https://images.unsplash.com/photo-1503387837-b154d5074bd2?w=400'
+    ],
+    workshopImages: [
+      'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&h=400&fit=crop'
     ]
   },
   {
@@ -126,6 +132,11 @@ export const mockWorkers: Worker[] = [
       'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400',
       'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400',
       'https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=400'
+    ],
+    workshopImages: [
+      'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?w=600&h=400&fit=crop'
     ]
   },
   {
@@ -150,6 +161,11 @@ export const mockWorkers: Worker[] = [
       'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400',
       'https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=400',
       'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?w=400'
+    ],
+    workshopImages: [
+      'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=400&fit=crop'
     ]
   },
   {
@@ -174,6 +190,11 @@ export const mockWorkers: Worker[] = [
       'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400',
       'https://images.unsplash.com/photo-1494526585095-c41746248156?w=400',
       'https://images.unsplash.com/photo-1604079628040-94301bb21b91?w=400'
+    ],
+    workshopImages: [
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1604079628040-94301bb21b91?w=600&h=400&fit=crop'
     ]
   },
   {
@@ -198,6 +219,11 @@ export const mockWorkers: Worker[] = [
       'https://images.unsplash.com/photo-1520637736862-4d197d17c89a?w=400',
       'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=400',
       'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400'
+    ],
+    workshopImages: [
+      'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1520637736862-4d197d17c89a?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=600&h=400&fit=crop'
     ]
   }
 ];

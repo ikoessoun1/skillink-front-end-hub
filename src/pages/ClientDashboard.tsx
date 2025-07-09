@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import ChatWindow from '@/components/chat/ChatWindow';
 import WorkerCard from '@/components/WorkerCard';
+import WorkerFeed from '@/components/WorkerFeed';
 import Layout from '@/components/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 import { getJobsByClientId, mockApplications, getUserById, getApplicationsByJobId, Client, mockWorkers } from '@/data/mockData';
@@ -39,101 +40,24 @@ const ClientDashboard: React.FC = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="all-workers">All Workers</TabsTrigger>
             <TabsTrigger value="applications">Applications</TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
           </TabsList>
 
-          {/* Dashboard Tab - Worker Portfolio Gallery */}
+          {/* Dashboard Tab - Worker Feed */}
           <TabsContent value="dashboard" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-foreground">Worker Portfolio Gallery</h2>
+              <h2 className="text-2xl font-bold text-foreground">Worker Portfolio Feed</h2>
               <Button asChild>
                 <Link to="/find-workers">Browse All Workers</Link>
               </Button>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockWorkers.slice(0, 6).map((worker) => (
-                <Card key={worker.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="w-12 h-12">
-                        <AvatarImage src={worker.avatar} />
-                        <AvatarFallback>{worker.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h3 className="font-semibold">{worker.name}</h3>
-                        <p className="text-sm text-muted-foreground">{worker.category}</p>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="space-y-4">
-                    {/* Portfolio Images Carousel */}
-                    <Carousel className="w-full">
-                      <CarouselContent>
-                        {worker.portfolioImages?.map((image, index) => (
-                          <CarouselItem key={index}>
-                            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                              <img 
-                                src={image} 
-                                alt={`${worker.name} work ${index + 1}`}
-                                className="w-full h-full object-cover rounded-lg"
-                              />
-                            </div>
-                          </CarouselItem>
-                        )) || Array.from({ length: 3 }).map((_, index) => (
-                          <CarouselItem key={index}>
-                            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                              <span className="text-muted-foreground">Sample Work {index + 1}</span>
-                            </div>
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                      <CarouselPrevious />
-                      <CarouselNext />
-                    </Carousel>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="font-medium">{worker.rating}</span>
-                      </div>
-                      <span className="font-semibold">${worker.hourlyRate}/hr</span>
-                    </div>
-
-                    <div className="flex space-x-2">
-                      <Button size="sm" className="flex-1">
-                        Message
-                      </Button>
-                      <Button size="sm" variant="outline" className="flex-1">
-                        View Profile
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <WorkerFeed workers={mockWorkers} />
           </TabsContent>
 
-          {/* All Workers Tab */}
-          <TabsContent value="all-workers" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-foreground">All Workers</h2>
-              <Button asChild>
-                <Link to="/find-workers">Advanced Search</Link>
-              </Button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockWorkers.map((worker) => (
-                <WorkerCard key={worker.id} worker={worker} />
-              ))}
-            </div>
-          </TabsContent>
 
           {/* Applications Tab */}
           <TabsContent value="applications" className="space-y-6">

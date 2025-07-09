@@ -3,7 +3,9 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Heart, MessageCircle, Share, Star, MapPin, Play } from 'lucide-react';
+import Autoplay from 'embla-carousel-autoplay';
 import { Worker } from '@/data/mockData';
 
 interface WorkerFeedProps {
@@ -155,27 +157,72 @@ const WorkerFeed: React.FC<WorkerFeedProps> = ({ workers }) => {
             </CardHeader>
 
             <CardContent className="px-0 pb-3">
-              {/* Media Content */}
+              {/* Media Content - Carousel for workshop images */}
               <div className="relative mb-4">
-                <img 
-                  src={post.content} 
-                  alt={post.project}
-                  className="w-full h-80 object-cover"
-                />
-                {post.type === 'video' && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-black/50 rounded-full p-3">
-                      <Play className="w-8 h-8 text-white fill-white" />
+                {worker.workshopImages && worker.workshopImages.length > 0 ? (
+                  <Carousel 
+                    className="w-full"
+                    plugins={[
+                      Autoplay({
+                        delay: 3000,
+                        stopOnInteraction: true,
+                        stopOnMouseEnter: true,
+                      }),
+                    ]}
+                  >
+                    <CarouselContent>
+                      {worker.workshopImages.map((image, index) => (
+                        <CarouselItem key={index}>
+                          <div className="relative">
+                            <img 
+                              src={image} 
+                              alt={`${worker.name} workshop ${index + 1}`}
+                              className="w-full h-80 object-cover"
+                            />
+                            {post.type === 'video' && index === 0 && (
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="bg-black/50 rounded-full p-3">
+                                  <Play className="w-8 h-8 text-white fill-white" />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="left-2" />
+                    <CarouselNext className="right-2" />
+                    
+                    {/* Project Badge */}
+                    <div className="absolute top-3 left-3 z-10">
+                      <Badge className="bg-black/70 text-white border-none">
+                        {post.project}
+                      </Badge>
+                    </div>
+                  </Carousel>
+                ) : (
+                  <div className="relative">
+                    <img 
+                      src={post.content} 
+                      alt={post.project}
+                      className="w-full h-80 object-cover"
+                    />
+                    {post.type === 'video' && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-black/50 rounded-full p-3">
+                          <Play className="w-8 h-8 text-white fill-white" />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Project Badge */}
+                    <div className="absolute top-3 left-3">
+                      <Badge className="bg-black/70 text-white border-none">
+                        {post.project}
+                      </Badge>
                     </div>
                   </div>
                 )}
-                
-                {/* Project Badge */}
-                <div className="absolute top-3 left-3">
-                  <Badge className="bg-black/70 text-white border-none">
-                    {post.project}
-                  </Badge>
-                </div>
               </div>
 
               {/* Actions */}
