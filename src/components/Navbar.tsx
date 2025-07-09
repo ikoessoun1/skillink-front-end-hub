@@ -33,17 +33,26 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/find-workers" className="text-muted-foreground hover:text-foreground transition-colors">
-              Find Workers
-            </Link>
+            {isAuthenticated && user?.type === 'client' && (
+              <>
+                <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Home
+                </Link>
+                <Link to="/find-workers" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Find Workers
+                </Link>
+              </>
+            )}
+            {!isAuthenticated && (
+              <Link to="/find-workers" className="text-muted-foreground hover:text-foreground transition-colors">
+                Find Workers
+              </Link>
+            )}
             {isAuthenticated && user?.type === 'worker' && (
               <Link to="/browse-jobs" className="text-muted-foreground hover:text-foreground transition-colors">
                 Find Jobs
               </Link>
             )}
-            <Link to="/how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">
-              Help
-            </Link>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -70,18 +79,34 @@ const Navbar: React.FC = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-popover">
-                    <DropdownMenuItem asChild>
-                      <Link to={getDashboardPath()}>Dashboard</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/profile">Profile</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/settings">Settings</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleLogout}>
-                      Logout
-                    </DropdownMenuItem>
+                    {user?.type === 'client' ? (
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link to="/profile">View Profile</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/settings">Settings</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout}>
+                          Logout
+                        </DropdownMenuItem>
+                      </>
+                    ) : (
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link to={getDashboardPath()}>Dashboard</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/profile">Profile</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/settings">Settings</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout}>
+                          Logout
+                        </DropdownMenuItem>
+                      </>
+                    )}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </>

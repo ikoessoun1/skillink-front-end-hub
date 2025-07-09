@@ -5,15 +5,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import ChatWindow from '@/components/chat/ChatWindow';
+import WorkerCard from '@/components/WorkerCard';
 import Layout from '@/components/Layout';
 import { useAuth } from '@/contexts/AuthContext';
-import { getJobsByClientId, mockJobs, mockApplications, getUserById, getApplicationsByJobId, Client } from '@/data/mockData';
-import { Calendar, DollarSign, MapPin, Clock, User, Plus, MessageSquare } from 'lucide-react';
+import { getJobsByClientId, mockApplications, getUserById, getApplicationsByJobId, Client, mockWorkers } from '@/data/mockData';
+import { MessageSquare, Trash2, Edit, Eye, Star } from 'lucide-react';
 
 const ClientDashboard: React.FC = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [activeChatUserId, setActiveChatUserId] = useState<string | null>(null);
 
   if (!user || user.type !== 'client') {
@@ -22,335 +24,157 @@ const ClientDashboard: React.FC = () => {
 
   const client = user as Client;
   const myJobs = getJobsByClientId(client.id);
-  const openJobs = myJobs.filter(job => job.status === 'open');
-  const inProgressJobs = myJobs.filter(job => job.status === 'in-progress');
-  const completedJobs = myJobs.filter(job => job.status === 'completed');
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'open': return 'bg-blue-100 text-blue-800';
-      case 'in-progress': return 'bg-yellow-100 text-yellow-800';
-      case 'completed': return 'bg-green-100 text-green-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getUrgencyColor = (urgency: string) => {
-    switch (urgency) {
-      case 'high': return 'bg-red-100 text-red-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'low': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
+  const applications = mockApplications;
 
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Hello, {client.name}!
+            Welcome, {client.name}!
           </h1>
           <p className="text-muted-foreground">
-            Find workers, send messages, and get your projects done
+            Manage your projects and connect with skilled workers
           </p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="active">Active Jobs</TabsTrigger>
-            <TabsTrigger value="completed">Completed</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="all-workers">All Workers</TabsTrigger>
             <TabsTrigger value="applications">Applications</TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
           </TabsList>
 
-          {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <Card className="shadow-card">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Jobs Posted</CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{client.jobsPosted}</div>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-card">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Jobs</CardTitle>
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{openJobs.length + inProgressJobs.length}</div>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-card">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Completed Jobs</CardTitle>
-                  <User className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{completedJobs.length}</div>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-card">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">${client.totalSpent.toLocaleString()}</div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Quick Actions */}
-            <Card className="shadow-card">
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
-                <CardDescription>Get started with these common tasks</CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-wrap gap-4">
-                <Button asChild>
-                  <Link to="/post-job">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Post New Job
-                  </Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link to="/find-workers">
-                    <User className="w-4 h-4 mr-2" />
-                    Browse Workers
-                  </Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link to="/messages">
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Messages
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Recent Jobs */}
-            <Card className="shadow-card">
-              <CardHeader>
-                <CardTitle>Recent Jobs</CardTitle>
-                <CardDescription>Your latest job postings</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {myJobs.slice(0, 3).map((job) => (
-                    <div key={job.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
-                      <div className="flex-1">
-                        <h3 className="font-medium text-foreground">{job.title}</h3>
-                        <div className="flex items-center space-x-4 text-sm text-muted-foreground mt-1">
-                          <span className="flex items-center">
-                            <MapPin className="w-3 h-3 mr-1" />
-                            {job.location}
-                          </span>
-                          <span className="flex items-center">
-                            <DollarSign className="w-3 h-3 mr-1" />
-                            ${job.budget}
-                          </span>
-                          <span className="flex items-center">
-                            <Calendar className="w-3 h-3 mr-1" />
-                            {job.createdAt}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge className={getStatusColor(job.status)}>
-                          {job.status}
-                        </Badge>
-                        <Badge className={getUrgencyColor(job.urgency)}>
-                          {job.urgency}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Active Jobs Tab */}
-          <TabsContent value="active" className="space-y-6">
+          {/* Dashboard Tab - Worker Portfolio Gallery */}
+          <TabsContent value="dashboard" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-foreground">Active Jobs</h2>
+              <h2 className="text-2xl font-bold text-foreground">Worker Portfolio Gallery</h2>
               <Button asChild>
-                <Link to="/post-job">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Post New Job
-                </Link>
+                <Link to="/find-workers">Browse All Workers</Link>
               </Button>
             </div>
-
-            <div className="grid gap-6">
-              {[...openJobs, ...inProgressJobs].map((job) => {
-                const applications = getApplicationsByJobId(job.id);
-                const worker = job.workerId ? getUserById(job.workerId) : null;
-                
-                return (
-                  <Card key={job.id} className="shadow-card">
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-xl">{job.title}</CardTitle>
-                          <CardDescription className="mt-1">{job.description}</CardDescription>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Badge className={getStatusColor(job.status)}>
-                            {job.status}
-                          </Badge>
-                          <Badge className={getUrgencyColor(job.urgency)}>
-                            {job.urgency}
-                          </Badge>
-                        </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {mockWorkers.slice(0, 6).map((worker) => (
+                <Card key={worker.id} className="hover:shadow-lg transition-shadow">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center space-x-3">
+                      <Avatar className="w-12 h-12">
+                        <AvatarImage src={worker.avatar} />
+                        <AvatarFallback>{worker.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h3 className="font-semibold">{worker.name}</h3>
+                        <p className="text-sm text-muted-foreground">{worker.category}</p>
                       </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center space-x-6 text-sm text-muted-foreground">
-                        <span className="flex items-center">
-                          <MapPin className="w-4 h-4 mr-1" />
-                          {job.location}
-                        </span>
-                        <span className="flex items-center">
-                          <DollarSign className="w-4 h-4 mr-1" />
-                          ${job.budget}
-                        </span>
-                        <span className="flex items-center">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          Posted {job.createdAt}
-                        </span>
-                      </div>
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-4">
+                    {/* Portfolio Images Carousel */}
+                    <Carousel className="w-full">
+                      <CarouselContent>
+                        {worker.portfolioImages?.map((image, index) => (
+                          <CarouselItem key={index}>
+                            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+                              <img 
+                                src={image} 
+                                alt={`${worker.name} work ${index + 1}`}
+                                className="w-full h-full object-cover rounded-lg"
+                              />
+                            </div>
+                          </CarouselItem>
+                        )) || Array.from({ length: 3 }).map((_, index) => (
+                          <CarouselItem key={index}>
+                            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+                              <span className="text-muted-foreground">Sample Work {index + 1}</span>
+                            </div>
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious />
+                      <CarouselNext />
+                    </Carousel>
 
-                      {worker && (
-                        <div className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
-                          <Avatar className="w-10 h-10">
-                            <AvatarImage src={worker.avatar} alt={worker.name} />
-                            <AvatarFallback>
-                              <User className="w-4 h-4" />
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium text-foreground">Assigned to {worker.name}</p>
-                            <p className="text-sm text-muted-foreground">{worker.type === 'worker' ? (worker as any).category : ''}</p>
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">
-                          {applications.length} applications received
-                        </span>
-                        <div className="flex space-x-2">
-                          <Button variant="outline" size="sm">
-                            View Details
-                          </Button>
-                          {job.status === 'open' && (
-                            <Button size="sm">
-                              Review Applications
-                            </Button>
-                          )}
-                        </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <span className="font-medium">{worker.rating}</span>
                       </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                      <span className="font-semibold">${worker.hourlyRate}/hr</span>
+                    </div>
+
+                    <div className="flex space-x-2">
+                      <Button size="sm" className="flex-1">
+                        Message
+                      </Button>
+                      <Button size="sm" variant="outline" className="flex-1">
+                        View Profile
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </TabsContent>
 
-          {/* Completed Jobs Tab */}
-          <TabsContent value="completed" className="space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">Completed Jobs</h2>
+          {/* All Workers Tab */}
+          <TabsContent value="all-workers" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-foreground">All Workers</h2>
+              <Button asChild>
+                <Link to="/find-workers">Advanced Search</Link>
+              </Button>
+            </div>
             
-            <div className="grid gap-6">
-              {completedJobs.map((job) => {
-                const worker = job.workerId ? getUserById(job.workerId) : null;
-                
-                return (
-                  <Card key={job.id} className="shadow-card">
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-xl">{job.title}</CardTitle>
-                          <CardDescription className="mt-1">{job.description}</CardDescription>
-                        </div>
-                        <Badge className={getStatusColor(job.status)}>
-                          {job.status}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center space-x-6 text-sm text-muted-foreground">
-                        <span className="flex items-center">
-                          <MapPin className="w-4 h-4 mr-1" />
-                          {job.location}
-                        </span>
-                        <span className="flex items-center">
-                          <DollarSign className="w-4 h-4 mr-1" />
-                          ${job.budget}
-                        </span>
-                        <span className="flex items-center">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          Completed {job.completedAt}
-                        </span>
-                      </div>
-
-                      {worker && (
-                        <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <Avatar className="w-10 h-10">
-                              <AvatarImage src={worker.avatar} alt={worker.name} />
-                              <AvatarFallback>
-                                <User className="w-4 h-4" />
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="font-medium text-foreground">Completed by {worker.name}</p>
-                              <p className="text-sm text-muted-foreground">{worker.type === 'worker' ? (worker as any).category : ''}</p>
-                            </div>
-                          </div>
-                          <Button variant="outline" size="sm">
-                            Leave Review
-                          </Button>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {mockWorkers.map((worker) => (
+                <WorkerCard key={worker.id} worker={worker} />
+              ))}
             </div>
           </TabsContent>
 
           {/* Applications Tab */}
           <TabsContent value="applications" className="space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">Recent Applications</h2>
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-foreground">Job Applications</h2>
+              <Button>
+                Post New Job
+              </Button>
+            </div>
             
             <div className="space-y-6">
-              {myJobs.filter(job => job.status === 'open').map((job) => {
-                const applications = getApplicationsByJobId(job.id);
-                
-                if (applications.length === 0) return null;
+              {myJobs.map((job) => {
+                const jobApplications = getApplicationsByJobId(job.id);
                 
                 return (
                   <Card key={job.id} className="shadow-card">
                     <CardHeader>
-                      <CardTitle className="text-lg">{job.title}</CardTitle>
-                      <CardDescription>{applications.length} applications</CardDescription>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-lg">{job.title}</CardTitle>
+                          <CardDescription>{job.description}</CardDescription>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button variant="outline" size="sm">
+                            <Edit className="w-4 h-4 mr-1" />
+                            Edit
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Trash2 className="w-4 h-4 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
-                        {applications.map((application) => {
+                        <p className="text-sm text-muted-foreground">
+                          {jobApplications.length} applications received
+                        </p>
+                        
+                        {jobApplications.map((application) => {
                           const worker = getUserById(application.workerId);
                           if (!worker) return null;
                           
@@ -359,12 +183,10 @@ const ClientDashboard: React.FC = () => {
                               <div className="flex items-center space-x-4">
                                 <Avatar className="w-12 h-12">
                                   <AvatarImage src={worker.avatar} alt={worker.name} />
-                                  <AvatarFallback>
-                                    <User className="w-5 h-5" />
-                                  </AvatarFallback>
+                                  <AvatarFallback>{worker.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                  <h4 className="font-medium text-foreground">{worker.name}</h4>
+                                  <h4 className="font-medium">{worker.name}</h4>
                                   <p className="text-sm text-muted-foreground">
                                     {worker.type === 'worker' ? (worker as any).category : ''} • ${application.proposedRate}/hr
                                   </p>
@@ -375,7 +197,8 @@ const ClientDashboard: React.FC = () => {
                               </div>
                               <div className="flex space-x-2">
                                 <Button variant="outline" size="sm">
-                                  View Profile
+                                  <Eye className="w-4 h-4 mr-1" />
+                                  View
                                 </Button>
                                 <Button size="sm">
                                   Accept
@@ -394,13 +217,15 @@ const ClientDashboard: React.FC = () => {
 
           {/* Messages Tab */}
           <TabsContent value="messages" className="space-y-6">
+            <h2 className="text-2xl font-bold text-foreground">Messages</h2>
+            
             <div className="flex flex-col lg:flex-row gap-6">
               <div className="flex-1">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
                       <MessageSquare className="w-5 h-5" />
-                      <span>Messages</span>
+                      <span>Chat with Workers</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -414,7 +239,7 @@ const ClientDashboard: React.FC = () => {
                         <MessageSquare className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                         <h3 className="text-lg font-medium">No active conversation</h3>
                         <p className="text-muted-foreground">
-                          Click "Chat" on any worker profile to start messaging
+                          Select a worker from "All Workers" tab to start messaging
                         </p>
                       </div>
                     )}

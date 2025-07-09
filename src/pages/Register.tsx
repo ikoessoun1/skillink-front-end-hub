@@ -35,8 +35,13 @@ const Register: React.FC = () => {
 
   // Worker fields
   const [category, setCategory] = useState('');
-  const [hourlyRate, setHourlyRate] = useState('');
   const [skills, setSkills] = useState('');
+  const [ghanaCard, setGhanaCard] = useState<File | null>(null);
+  const [personImage, setPersonImage] = useState<File | null>(null);
+  const [workshopImages, setWorkshopImages] = useState<File[]>([]);
+
+  // Client fields  
+  const [validId, setValidId] = useState<File | null>(null);
 
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -59,7 +64,6 @@ const Register: React.FC = () => {
           ? { company }
           : { 
               category,
-              hourlyRate: hourlyRate ? parseInt(hourlyRate) : 0,
               skills: skills.split(',').map(s => s.trim()).filter(s => s)
             }
         )
@@ -196,6 +200,17 @@ const Register: React.FC = () => {
                         placeholder="Enter your company name"
                       />
                     </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="validId">Valid ID Image</Label>
+                      <Input
+                        id="validId"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setValidId(e.target.files?.[0] || null)}
+                        required
+                      />
+                    </div>
                   </TabsContent>
 
                   {/* Worker-specific fields */}
@@ -217,18 +232,6 @@ const Register: React.FC = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="hourlyRate">Hourly Rate ($)</Label>
-                      <Input
-                        id="hourlyRate"
-                        type="number"
-                        value={hourlyRate}
-                        onChange={(e) => setHourlyRate(e.target.value)}
-                        placeholder="Enter your hourly rate"
-                        min="0"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
                       <Label htmlFor="skills">Skills (comma-separated)</Label>
                       <Textarea
                         id="skills"
@@ -237,6 +240,41 @@ const Register: React.FC = () => {
                         placeholder="e.g., Framing, Drywall, Finishing"
                         className="min-h-[80px]"
                       />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="ghanaCard">Ghana Card Image</Label>
+                      <Input
+                        id="ghanaCard"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setGhanaCard(e.target.files?.[0] || null)}
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="personImage">Your Photo</Label>
+                      <Input
+                        id="personImage"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setPersonImage(e.target.files?.[0] || null)}
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="workshopImages">Workshop Images (3 photos)</Label>
+                      <Input
+                        id="workshopImages"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={(e) => setWorkshopImages(Array.from(e.target.files || []).slice(0, 3))}
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground">Upload up to 3 images of your work</p>
                     </div>
                   </TabsContent>
 
