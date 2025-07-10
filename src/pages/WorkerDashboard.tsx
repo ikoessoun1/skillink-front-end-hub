@@ -86,12 +86,9 @@ const WorkerDashboard: React.FC = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="available">Available Jobs</TabsTrigger>
-            <TabsTrigger value="applications">My Applications</TabsTrigger>
-            <TabsTrigger value="active">Active Jobs</TabsTrigger>
-            <TabsTrigger value="completed">Completed</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="overview">Overview & Available Jobs</TabsTrigger>
+            <TabsTrigger value="completed">Completed Jobs</TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
           </TabsList>
 
@@ -130,13 +127,13 @@ const WorkerDashboard: React.FC = () => {
 
               <Card className="shadow-card">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Hourly Rate</CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium">Active Jobs</CardTitle>
+                  <Clock className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">${worker.hourlyRate}</div>
+                  <div className="text-2xl font-bold">{activeJobs.length}</div>
                   <p className="text-xs text-muted-foreground">
-                    Per hour
+                    Currently working
                   </p>
                 </CardContent>
               </Card>
@@ -218,137 +215,51 @@ const WorkerDashboard: React.FC = () => {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
 
-          {/* Available Jobs Tab */}
-          <TabsContent value="available" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-foreground">Available Jobs</h2>
-              <Badge variant="outline">{availableJobs.length} jobs available</Badge>
-            </div>
+            {/* Available Jobs Section */}
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-foreground">Available Jobs</h2>
+                <Badge variant="outline">{availableJobs.length} jobs available</Badge>
+              </div>
 
-            <div className="grid gap-6">
-              {availableJobs.map((job) => {
-                const client = getUserById(job.clientId);
-                
-                return (
-                  <Card key={job.id} className="shadow-card hover:shadow-hover transition-shadow">
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-xl">{job.title}</CardTitle>
-                          <CardDescription className="mt-2">{job.description}</CardDescription>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Badge className={getUrgencyColor(job.urgency)}>
-                            {job.urgency} priority
-                          </Badge>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center space-x-6 text-sm text-muted-foreground">
-                        <span className="flex items-center">
-                          <MapPin className="w-4 h-4 mr-1" />
-                          {job.location}
-                        </span>
-                        <span className="flex items-center">
-                          <DollarSign className="w-4 h-4 mr-1" />
-                          ${job.budget}
-                        </span>
-                        <span className="flex items-center">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          Posted {job.createdAt}
-                        </span>
-                      </div>
-
-                      {client && (
-                        <div className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
-                          <Avatar className="w-8 h-8">
-                            <AvatarImage src={client.avatar} alt={client.name} />
-                            <AvatarFallback>
-                              <User className="w-4 h-4" />
-                            </AvatarFallback>
-                          </Avatar>
+              <div className="grid gap-6">
+                {availableJobs.map((job) => {
+                  const client = getUserById(job.clientId);
+                  
+                  return (
+                    <Card key={job.id} className="shadow-card hover:shadow-hover transition-shadow">
+                      <CardHeader>
+                        <div className="flex justify-between items-start">
                           <div>
-                            <p className="font-medium text-foreground">{client.name}</p>
-                            <p className="text-sm text-muted-foreground">{client.location}</p>
+                            <CardTitle className="text-xl">{job.title}</CardTitle>
+                            <CardDescription className="mt-2">{job.description}</CardDescription>
+                          </div>
+                          <div className="flex space-x-2">
+                            <Badge className={getUrgencyColor(job.urgency)}>
+                              {job.urgency} priority
+                            </Badge>
                           </div>
                         </div>
-                      )}
-
-                      <div className="flex justify-between items-center">
-                        <div className="flex flex-wrap gap-2">
-                          {job.requirements.slice(0, 2).map((req, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {req}
-                            </Badge>
-                          ))}
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="flex items-center space-x-6 text-sm text-muted-foreground">
+                          <span className="flex items-center">
+                            <MapPin className="w-4 h-4 mr-1" />
+                            {job.location}
+                          </span>
+                          <span className="flex items-center">
+                            <DollarSign className="w-4 h-4 mr-1" />
+                            ${job.budget}
+                          </span>
+                          <span className="flex items-center">
+                            <Calendar className="w-4 h-4 mr-1" />
+                            Posted {job.createdAt}
+                          </span>
                         </div>
-                        <div className="flex space-x-2">
-                          <Button variant="outline" size="sm">
-                            View Details
-                          </Button>
-                          <Button size="sm">
-                            Apply Now
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </TabsContent>
 
-          {/* Applications Tab */}
-          <TabsContent value="applications" className="space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">My Applications</h2>
-            
-            <div className="grid gap-6">
-              {myApplications.map((application) => {
-                const job = mockJobs.find(j => j.id === application.jobId);
-                const client = job ? getUserById(job.clientId) : null;
-                
-                if (!job) return null;
-                
-                return (
-                  <Card key={application.id} className="shadow-card">
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-xl">{job.title}</CardTitle>
-                          <CardDescription className="mt-1">Applied on {application.createdAt}</CardDescription>
-                        </div>
-                        <Badge className={getStatusColor(application.status)}>
-                          {application.status}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center space-x-6 text-sm text-muted-foreground">
-                        <span className="flex items-center">
-                          <MapPin className="w-4 h-4 mr-1" />
-                          {job.location}
-                        </span>
-                        <span className="flex items-center">
-                          <DollarSign className="w-4 h-4 mr-1" />
-                          ${job.budget}
-                        </span>
-                        <span className="text-primary font-medium">
-                          Your rate: ${application.proposedRate}/hr
-                        </span>
-                      </div>
-
-                      <div className="p-3 bg-muted/50 rounded-lg">
-                        <p className="text-sm text-muted-foreground italic">
-                          Your message: "{application.message}"
-                        </p>
-                      </div>
-
-                      {client && (
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
+                        {client && (
+                          <div className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
                             <Avatar className="w-8 h-8">
                               <AvatarImage src={client.avatar} alt={client.name} />
                               <AvatarFallback>
@@ -360,83 +271,30 @@ const WorkerDashboard: React.FC = () => {
                               <p className="text-sm text-muted-foreground">{client.location}</p>
                             </div>
                           </div>
-                          <Button variant="outline" size="sm">
-                            Contact Client
-                          </Button>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </TabsContent>
+                        )}
 
-          {/* Active Jobs Tab */}
-          <TabsContent value="active" className="space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">Active Jobs</h2>
-            
-            <div className="grid gap-6">
-              {activeJobs.map((job) => {
-                const client = getUserById(job.clientId);
-                
-                return (
-                  <Card key={job.id} className="shadow-card">
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-xl">{job.title}</CardTitle>
-                          <CardDescription className="mt-1">{job.description}</CardDescription>
-                        </div>
-                        <Badge className={getStatusColor(job.status)}>
-                          {job.status}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center space-x-6 text-sm text-muted-foreground">
-                        <span className="flex items-center">
-                          <MapPin className="w-4 h-4 mr-1" />
-                          {job.location}
-                        </span>
-                        <span className="flex items-center">
-                          <DollarSign className="w-4 h-4 mr-1" />
-                          ${job.budget}
-                        </span>
-                        <span className="flex items-center">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          Started {job.createdAt}
-                        </span>
-                      </div>
-
-                      {client && (
-                        <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <Avatar className="w-10 h-10">
-                              <AvatarImage src={client.avatar} alt={client.name} />
-                              <AvatarFallback>
-                                <User className="w-4 h-4" />
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="font-medium text-foreground">{client.name}</p>
-                              <p className="text-sm text-muted-foreground">{client.location}</p>
-                            </div>
+                        <div className="flex justify-between items-center">
+                          <div className="flex flex-wrap gap-2">
+                            {job.requirements.slice(0, 2).map((req, index) => (
+                              <Badge key={index} variant="outline" className="text-xs">
+                                {req}
+                              </Badge>
+                            ))}
                           </div>
                           <div className="flex space-x-2">
                             <Button variant="outline" size="sm">
-                              Contact Client
+                              View Details
                             </Button>
                             <Button size="sm">
-                              Mark Complete
+                              Apply Now
                             </Button>
                           </div>
                         </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
           </TabsContent>
 
@@ -501,6 +359,18 @@ const WorkerDashboard: React.FC = () => {
                 );
               })}
             </div>
+          </TabsContent>
+
+          {/* Messages Tab */}
+          <TabsContent value="messages" className="space-y-6">
+            <h2 className="text-2xl font-bold text-foreground">Messages</h2>
+            <Card className="shadow-card">
+              <CardContent className="p-6">
+                <p className="text-muted-foreground text-center">
+                  Message functionality will be implemented here
+                </p>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
