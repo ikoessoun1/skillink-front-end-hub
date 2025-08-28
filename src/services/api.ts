@@ -1,3 +1,4 @@
+
 import { ApiResponse, LoginCredentials, RegisterData, User, Job, Application, Message } from '../types/api';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
@@ -86,7 +87,9 @@ class ApiService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('skilllink_user');
-    window.location.href = '/login';
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
   }
 
   // Authentication endpoints
