@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +17,7 @@ import BrowseJobs from "./pages/BrowseJobs";
 import FindWorkers from "./pages/FindWorkers";
 import PostJob from "./pages/PostJob";
 import Profile from "./pages/Profile";
+import WorkerProfile from "./pages/WorkerProfile";
 import Settings from "./pages/Settings";
 import HowItWorks from "./pages/HowItWorks";
 
@@ -40,6 +42,7 @@ const App = () => (
             <Route path="/find-workers" element={<FindWorkers />} />
             <Route path="/post-job" element={<PostJob />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/worker/:workerId" element={<WorkerProfile />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/about" element={<HowItWorks />} />

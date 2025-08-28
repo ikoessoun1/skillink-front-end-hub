@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,8 +10,13 @@ import heroImage from '@/assets/hero-image.jpg';
 import { ArrowDown, User, Search } from 'lucide-react';
 
 const Landing: React.FC = () => {
+  const navigate = useNavigate();
   const featuredWorkers = mockWorkers.slice(0, 3);
   const recentReviews = mockReviews.slice(0, 3);
+
+  const handleViewProfile = (workerId: string) => {
+    navigate(`/worker/${workerId}`);
+  };
 
   return (
     <Layout>
@@ -125,7 +130,12 @@ const Landing: React.FC = () => {
                     ))}
                   </div>
                   <p className="text-sm text-muted-foreground">{worker.location}</p>
-                  <Button variant="outline" size="sm" className="mt-4">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-4"
+                    onClick={() => handleViewProfile(worker.id)}
+                  >
                     View Profile
                   </Button>
                 </CardContent>
