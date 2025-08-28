@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
-import { ThemeToggle } from './ThemeToggle';
 import { ChevronDown, User, MessageSquare } from 'lucide-react';
 
 const Navbar: React.FC = () => {
@@ -56,9 +55,7 @@ const Navbar: React.FC = () => {
             )}
           </div>
 
-          <div className="flex items-center space-x-2">
-            <ThemeToggle />
-            
+          <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <>
                 <Button variant="outline" size="sm" asChild>
