@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import Layout from '@/components/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { LoginCredentials } from '@/types/api';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -30,7 +32,9 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      const success = await login(email, password, userType);
+      const credentials: LoginCredentials = { email, password, userType };
+      const success = await login(credentials);
+      
       if (success) {
         toast({
           title: 'Welcome back!',

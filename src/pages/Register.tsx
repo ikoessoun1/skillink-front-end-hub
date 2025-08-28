@@ -12,6 +12,7 @@ import Layout from '@/components/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 import { serviceCategories } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
+import { RegisterData } from '@/types/api';
 
 const Register: React.FC = () => {
   const location = useLocation();
@@ -53,7 +54,7 @@ const Register: React.FC = () => {
     setError('');
 
     try {
-      const userData = {
+      const userData: RegisterData = {
         name,
         email,
         password,
