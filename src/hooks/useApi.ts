@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { apiService } from '../services/api';
+import { activeApiService } from '../services/apiConfig';
 import { ApiResponse, ApiError } from '../types/api';
 
 interface UseApiState<T> {

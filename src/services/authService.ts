@@ -1,12 +1,12 @@
 
-import { apiService } from './api';
+import { activeApiService } from './apiConfig';
 import { setTokens, clearTokens } from '../utils/auth';
 import { LoginCredentials, RegisterData, User } from '../types/api';
 
 class AuthService {
   async login(credentials: LoginCredentials): Promise<User> {
     try {
-      const response = await apiService.login(credentials);
+      const response = await activeApiService.login(credentials);
       
       if (response.success && response.data) {
         const { user, access, refresh } = response.data;
@@ -24,7 +24,7 @@ class AuthService {
 
   async register(userData: RegisterData): Promise<User> {
     try {
-      const response = await apiService.register(userData);
+      const response = await activeApiService.register(userData);
       
       if (response.success && response.data) {
         const { user, access, refresh } = response.data;
@@ -42,7 +42,7 @@ class AuthService {
 
   async logout(): Promise<void> {
     try {
-      await apiService.logout();
+      await activeApiService.logout();
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -52,7 +52,7 @@ class AuthService {
 
   async getCurrentUser(): Promise<User | null> {
     try {
-      const response = await apiService.getCurrentUser();
+      const response = await activeApiService.getCurrentUser();
       
       if (response.success && response.data) {
         localStorage.setItem('skilllink_user', JSON.stringify(response.data));
