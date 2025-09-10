@@ -225,6 +225,21 @@ class ApiService {
 
     return response.json();
   }
+
+  // Locations endpoint
+  async getLocations(): Promise<ApiResponse<{ value: string; label: string }[]>> {
+    return this.request('/locations/');
+  }
+
+  // Categories endpoint  
+  async getCategories(): Promise<ApiResponse<{ id: string; name: string; icon: string }[]>> {
+    return this.request('/categories/');
+  }
+
+  // Skills endpoint
+  async getSkillsByCategory(categoryId: string): Promise<ApiResponse<string[]>> {
+    return this.request(`/skills/?category=${categoryId}`);
+  }
 }
 
 export const apiService = new ApiService();

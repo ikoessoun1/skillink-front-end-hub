@@ -379,6 +379,24 @@ class DemoApiService {
     };
     return this.mockRequest({ url: mockUrls[type] });
   }
+
+  // Locations endpoint
+  async getLocations(): Promise<ApiResponse<{ value: string; label: string }[]>> {
+    const { ghanaLocations } = await import('../data/mockData');
+    return this.mockRequest(ghanaLocations);
+  }
+
+  // Categories endpoint  
+  async getCategories(): Promise<ApiResponse<{ id: string; name: string; icon: string }[]>> {
+    const { serviceCategories } = await import('../data/mockData');
+    return this.mockRequest(serviceCategories);
+  }
+
+  // Skills endpoint
+  async getSkillsByCategory(categoryId: string): Promise<ApiResponse<string[]>> {
+    const { skillsByCategory } = await import('../data/mockData');
+    return this.mockRequest(skillsByCategory[categoryId] || []);
+  }
 }
 
 export const demoApiService = new DemoApiService();

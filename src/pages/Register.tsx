@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import { SkillSelector } from '@/components/ui/skill-selector';
 import Layout from '@/components/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 import { serviceCategories, ghanaLocations, skillsByCategory } from '@/data/mockData';
+import { getLocations, getCategories, getSkillsByCategory } from '@/services/apiConfig';
 import { useToast } from '@/hooks/use-toast';
 import { RegisterData } from '@/types/api';
 
@@ -41,12 +42,62 @@ const Register: React.FC = () => {
   const [personImage, setPersonImage] = useState<File | null>(null);
   const [workshopImages, setWorkshopImages] = useState<File[]>([]);
 
+  // Data states
+  const [locations, setLocations] = useState(ghanaLocations);
+  const [categories, setCategories] = useState<{ id: string; name: string; icon: string; description?: string; }[]>(serviceCategories);
+  const [availableSkills, setAvailableSkills] = useState<string[]>([]);
+
   // Client fields  
   const [validId, setValidId] = useState<File | null>(null);
 
   const { register } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Load data on component mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        // Try to load locations from API
+        const locationsResponse = await getLocations();
+        setLocations(locationsResponse.data);
+      } catch (error) {
+        console.warn('Failed to load locations from API, using demo data');
+      }
+
+      try {
+        // Try to load categories from API
+        const categoriesResponse = await getCategories();
+        setCategories(categoriesResponse.data);
+      } catch (error) {
+        console.warn('Failed to load categories from API, using demo data');
+      }
+    };
+
+    loadData();
+  }, []);
+
+  // Load skills when category changes
+  useEffect(() => {
+    const loadSkills = async () => {
+      if (category) {
+        try {
+          // Try to load skills from API
+          const skillsResponse = await getSkillsByCategory(category);
+          setAvailableSkills(skillsResponse.data);
+        } catch (error) {
+          console.warn('Failed to load skills from API, using demo data');
+          setAvailableSkills(skillsByCategory[category] || []);
+        }
+      } else {
+        setAvailableSkills([]);
+      }
+      // Reset selected skills when category changes
+      setSelectedSkills([]);
+    };
+
+    loadSkills();
+  }, [category]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -177,17 +228,17 @@ const Register: React.FC = () => {
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location</Label>
-                    <SearchableSelect
-                      options={ghanaLocations}
-                      value={userLocation}
-                      onValueChange={setUserLocation}
-                      placeholder="Select your location"
-                      searchPlaceholder="Search locations..."
-                      emptyText="No locations found."
-                    />
-                  </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="location">Location</Label>
+                      <SearchableSelect
+                        options={locations}
+                        value={userLocation}
+                        onValueChange={setUserLocation}
+                        placeholder="Select your location"
+                        searchPlaceholder="Search locations..."
+                        emptyText="No locations found."
+                      />
+                    </div>
 
                   {/* Client-specific fields */}
                   <TabsContent value="client" className="space-y-4 mt-4">
@@ -219,7 +270,7 @@ const Register: React.FC = () => {
                     <div className="space-y-2">
                       <Label htmlFor="category">Primary Category</Label>
                       <SearchableSelect
-                        options={serviceCategories.map(cat => ({ 
+                        options={categories.map(cat => ({ 
                           value: cat.id, 
                           label: `${cat.icon} ${cat.name}` 
                         }))}
@@ -233,9 +284,9 @@ const Register: React.FC = () => {
 
                     <div className="space-y-2">
                       <Label>Skills (Select up to 8 skills)</Label>
-                      {category && skillsByCategory[category] ? (
+                      {category && availableSkills.length > 0 ? (
                         <SkillSelector
-                          availableSkills={skillsByCategory[category]}
+                          availableSkills={availableSkills}
                           selectedSkills={selectedSkills}
                           onSkillToggle={(skill) => {
                             if (selectedSkills.includes(skill)) {

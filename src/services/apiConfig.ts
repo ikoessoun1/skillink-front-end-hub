@@ -28,5 +28,8 @@ export const {
   getWorkerById,
   getMessages,
   sendMessage,
-  uploadFile
+  uploadFile,
+  getLocations,
+  getCategories,
+  getSkillsByCategory
 } = activeApiService;
