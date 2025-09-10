@@ -419,6 +419,25 @@ export const mockReviews: Review[] = [
   }
 ];
 
+// Ghana Locations (Demo Data)
+export const ghanaLocations = [
+  { value: 'accra', label: 'Accra' },
+  { value: 'kumasi', label: 'Kumasi' },
+  { value: 'tamale', label: 'Tamale' },
+  { value: 'cape-coast', label: 'Cape Coast' },
+  { value: 'sekondi-takoradi', label: 'Sekondi-Takoradi' },
+  { value: 'sunyani', label: 'Sunyani' },
+  { value: 'koforidua', label: 'Koforidua' },
+  { value: 'ho', label: 'Ho' },
+  { value: 'wa', label: 'Wa' },
+  { value: 'bolgatanga', label: 'Bolgatanga' },
+  { value: 'tema', label: 'Tema' },
+  { value: 'madina', label: 'Madina' },
+  { value: 'kasoa', label: 'Kasoa' },
+  { value: 'dansoman', label: 'Dansoman' },
+  { value: 'ashiaman', label: 'Ashiaman' }
+];
+
 // Service Categories
 export const serviceCategories = [
   { id: 'carpenter', name: 'Carpenter', icon: '🔨', description: 'Framing, cabinets, trim work' },
@@ -428,8 +447,76 @@ export const serviceCategories = [
   { id: 'painter', name: 'Painter', icon: '🎨', description: 'Interior and exterior painting' },
   { id: 'roofer', name: 'Roofer', icon: '🏠', description: 'Roof repair and installation' },
   { id: 'hvac', name: 'HVAC Tech', icon: '❄️', description: 'Heating and cooling systems' },
-  { id: 'landscaper', name: 'Landscaper', icon: '🌿', description: 'Lawn care and garden design' }
+  { id: 'landscaper', name: 'Landscaper', icon: '🌿', description: 'Lawn care and garden design' },
+  { id: 'mechanic', name: 'Mechanic', icon: '🔧', description: 'Auto and machinery repair' },
+  { id: 'welder', name: 'Welder', icon: '⚒️', description: 'Metal fabrication and welding' },
+  { id: 'tailor', name: 'Tailor', icon: '✂️', description: 'Clothing and fabric work' },
+  { id: 'barber', name: 'Barber', icon: '💈', description: 'Hair cutting and styling' }
 ];
+
+// Skills by Category (Demo Data)
+export const skillsByCategory: Record<string, string[]> = {
+  carpenter: [
+    'Framing', 'Drywall Installation', 'Cabinet Installation', 'Trim Work', 
+    'Door Installation', 'Window Installation', 'Deck Building', 'Furniture Making',
+    'Wood Finishing', 'Roof Framing', 'Custom Millwork', 'Flooring Installation'
+  ],
+  electrician: [
+    'Residential Wiring', 'Commercial Wiring', 'Panel Installation', 'Outlet Installation',
+    'Switch Installation', 'Lighting Installation', 'Ceiling Fan Installation', 'Generator Installation',
+    'Solar Panel Installation', 'Security System Wiring', 'Data Cable Installation', 'Motor Repair'
+  ],
+  plumber: [
+    'Pipe Installation', 'Drain Cleaning', 'Water Heater Installation', 'Toilet Installation',
+    'Faucet Repair', 'Leak Detection', 'Sewer Line Repair', 'Bathroom Renovation',
+    'Kitchen Plumbing', 'Gas Line Installation', 'Pipe Welding', 'Septic Systems'
+  ],
+  mason: [
+    'Bricklaying', 'Stone Work', 'Concrete Pouring', 'Block Installation',
+    'Plastering', 'Tile Installation', 'Foundation Work', 'Retaining Walls',
+    'Chimney Repair', 'Patio Construction', 'Walkway Installation', 'Restoration Work'
+  ],
+  painter: [
+    'Interior Painting', 'Exterior Painting', 'Wall Preparation', 'Primer Application',
+    'Spray Painting', 'Brush Painting', 'Wallpaper Installation', 'Color Matching',
+    'Texture Application', 'Staining', 'Epoxy Coating', 'Decorative Painting'
+  ],
+  roofer: [
+    'Shingle Installation', 'Metal Roofing', 'Flat Roof Repair', 'Gutter Installation',
+    'Roof Inspection', 'Leak Repair', 'Skylight Installation', 'Insulation Installation',
+    'Ventilation Systems', 'Emergency Repairs', 'Roof Cleaning', 'Solar Panel Mounting'
+  ],
+  hvac: [
+    'AC Installation', 'Heater Installation', 'Ductwork Installation', 'System Maintenance',
+    'Refrigerant Handling', 'Thermostat Installation', 'Air Quality Testing', 'Filter Replacement',
+    'Heat Pump Installation', 'Ventilation Systems', 'Commercial HVAC', 'Energy Audits'
+  ],
+  landscaper: [
+    'Lawn Mowing', 'Tree Trimming', 'Garden Design', 'Irrigation Installation',
+    'Mulching', 'Fertilization', 'Pest Control', 'Hardscape Installation',
+    'Seasonal Cleanup', 'Plant Installation', 'Soil Preparation', 'Landscape Lighting'
+  ],
+  mechanic: [
+    'Engine Repair', 'Brake Repair', 'Transmission Repair', 'Oil Change',
+    'Tire Installation', 'Battery Replacement', 'Electrical Systems', 'AC Repair',
+    'Diagnostic Testing', 'Suspension Repair', 'Exhaust Repair', 'Preventive Maintenance'
+  ],
+  welder: [
+    'Arc Welding', 'MIG Welding', 'TIG Welding', 'Gas Welding',
+    'Metal Fabrication', 'Pipe Welding', 'Structural Welding', 'Aluminum Welding',
+    'Stainless Steel Welding', 'Repair Welding', 'Custom Metalwork', 'Gate Fabrication'
+  ],
+  tailor: [
+    'Dress Making', 'Suit Tailoring', 'Alterations', 'Pattern Making',
+    'Embroidery', 'Fabric Selection', 'Fitting Services', 'Custom Design',
+    'Repair Services', 'Hemming', 'Zipper Installation', 'Button Installation'
+  ],
+  barber: [
+    'Hair Cutting', 'Beard Trimming', 'Shaving', 'Hair Washing',
+    'Styling', 'Scalp Treatment', 'Hair Coloring', 'Facial Treatment',
+    'Eyebrow Trimming', 'Mustache Grooming', 'Hair Therapy', 'Special Occasion Styling'
+  ]
+};
 
 // Helper functions
 export const getAllUsers = (): User[] => [...mockWorkers, ...mockClients];

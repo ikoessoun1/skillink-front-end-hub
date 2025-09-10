@@ -5,12 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { SearchableSelect } from '@/components/ui/searchable-select';
+import { SkillSelector } from '@/components/ui/skill-selector';
 import Layout from '@/components/Layout';
 import { useAuth } from '@/contexts/AuthContext';
-import { serviceCategories } from '@/data/mockData';
+import { serviceCategories, ghanaLocations, skillsByCategory } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
 import { RegisterData } from '@/types/api';
 
@@ -36,7 +36,7 @@ const Register: React.FC = () => {
 
   // Worker fields
   const [category, setCategory] = useState('');
-  const [skills, setSkills] = useState('');
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [ghanaCard, setGhanaCard] = useState<File | null>(null);
   const [personImage, setPersonImage] = useState<File | null>(null);
   const [workshopImages, setWorkshopImages] = useState<File[]>([]);
@@ -65,7 +65,7 @@ const Register: React.FC = () => {
           ? { company }
           : { 
               category,
-              skills: skills.split(',').map(s => s.trim()).filter(s => s)
+              skills: selectedSkills
             }
         )
       };
@@ -179,13 +179,13 @@ const Register: React.FC = () => {
 
                   <div className="space-y-2">
                     <Label htmlFor="location">Location</Label>
-                    <Input
-                      id="location"
-                      type="text"
+                    <SearchableSelect
+                      options={ghanaLocations}
                       value={userLocation}
-                      onChange={(e) => setUserLocation(e.target.value)}
-                      required
-                      placeholder="Enter your city, state"
+                      onValueChange={setUserLocation}
+                      placeholder="Select your location"
+                      searchPlaceholder="Search locations..."
+                      emptyText="No locations found."
                     />
                   </div>
 
@@ -218,29 +218,39 @@ const Register: React.FC = () => {
                   <TabsContent value="worker" className="space-y-4 mt-4">
                     <div className="space-y-2">
                       <Label htmlFor="category">Primary Category</Label>
-                      <Select value={category} onValueChange={setCategory} required>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select your primary trade" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {serviceCategories.map((cat) => (
-                            <SelectItem key={cat.id} value={cat.name}>
-                              {cat.icon} {cat.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <SearchableSelect
+                        options={serviceCategories.map(cat => ({ 
+                          value: cat.id, 
+                          label: `${cat.icon} ${cat.name}` 
+                        }))}
+                        value={category}
+                        onValueChange={setCategory}
+                        placeholder="Select your primary trade"
+                        searchPlaceholder="Search categories..."
+                        emptyText="No categories found."
+                      />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="skills">Skills (comma-separated)</Label>
-                      <Textarea
-                        id="skills"
-                        value={skills}
-                        onChange={(e) => setSkills(e.target.value)}
-                        placeholder="e.g., Framing, Drywall, Finishing"
-                        className="min-h-[80px]"
-                      />
+                      <Label>Skills (Select up to 8 skills)</Label>
+                      {category && skillsByCategory[category] ? (
+                        <SkillSelector
+                          availableSkills={skillsByCategory[category]}
+                          selectedSkills={selectedSkills}
+                          onSkillToggle={(skill) => {
+                            if (selectedSkills.includes(skill)) {
+                              setSelectedSkills(selectedSkills.filter(s => s !== skill));
+                            } else {
+                              setSelectedSkills([...selectedSkills, skill]);
+                            }
+                          }}
+                          maxSkills={8}
+                        />
+                      ) : (
+                        <p className="text-sm text-muted-foreground">
+                          Please select a category first to choose your skills.
+                        </p>
+                      )}
                     </div>
 
                     <div className="space-y-2">
