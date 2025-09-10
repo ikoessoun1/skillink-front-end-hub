@@ -2,7 +2,7 @@ import { apiService } from './api';
 import { demoApiService } from './demoApi';
 
 // Toggle between demo and real API
-const USE_DEMO_API = import.meta.env.VITE_USE_DEMO_API === 'true' || true; // Default to demo for now
+const USE_DEMO_API = import.meta.env.VITE_USE_DEMO_API === 'false' || false; // Default to demo for now
 
 // Export the appropriate service
 export const activeApiService = USE_DEMO_API ? demoApiService : apiService;

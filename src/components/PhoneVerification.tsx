@@ -16,11 +16,8 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({ children }) => {
 
   // Demo phone numbers for testing
   const subscribedPhones = [
-    '+1234567890',
-    '+1987654321',
-    '+1555123456',
-    '+1666777888',
-    '+1999888777'
+    '0264963137',
+
   ];
 
   useEffect(() => {
@@ -44,26 +41,56 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({ children }) => {
     }
 
     setIsLoading(true);
-    
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    if (subscribedPhones.includes(phoneNumber.trim())) {
-      setIsVerified(true);
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/numbers/check/?number=${encodeURIComponent(phoneNumber.trim())}`
+      );
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          toast({
+            title: "Access Denied",
+            description: "This phone number is not subscribed to SkillLink service.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Server Error",
+            description: "Something went wrong, please try again later.",
+            variant: "destructive",
+          });
+        }
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.is_active) {
+        setIsVerified(true);
+        toast({
+          title: "Welcome to SkillLink!",
+          description: "Phone number verified successfully.",
+        });
+      } else {
+        toast({
+          title: "Access Denied",
+          description: "This phone number is deactivated.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Verification error:", error);
       toast({
-        title: "Welcome to SkillLink!",
-        description: "Phone number verified successfully.",
-      });
-    } else {
-      toast({
-        title: "Access Denied",
-        description: "This phone number is not subscribed to SkillLink service.",
+        title: "Network Error",
+        description: "Unable to reach the server. Please check your connection.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
+
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {

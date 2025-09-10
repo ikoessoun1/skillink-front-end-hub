@@ -65,7 +65,7 @@ class ApiService {
       const refreshToken = localStorage.getItem('refresh_token');
       if (!refreshToken) return false;
 
-      const response = await fetch(`${API_BASE_URL}/auth/refresh/`, {
+      const response = await fetch(`${API_BASE_URL}/refresh/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh: refreshToken }),
@@ -94,14 +94,14 @@ class ApiService {
 
   // Authentication endpoints
   async login(credentials: LoginCredentials): Promise<ApiResponse<{ user: User; access: string; refresh: string }>> {
-    return this.request('/auth/login/', {
+    return this.request('/login/', {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
   }
 
   async register(userData: RegisterData): Promise<ApiResponse<{ user: User; access: string; refresh: string }>> {
-    return this.request('/auth/register/', {
+    return this.request('/register/', {
       method: 'POST',
       body: JSON.stringify(userData),
     });
@@ -109,7 +109,7 @@ class ApiService {
 
   async logout(): Promise<ApiResponse<void>> {
     const refreshToken = localStorage.getItem('refresh_token');
-    return this.request('/auth/logout/', {
+    return this.request('/logout/', {
       method: 'POST',
       body: JSON.stringify({ refresh: refreshToken }),
     });
@@ -117,7 +117,7 @@ class ApiService {
 
   async refreshTokens(): Promise<ApiResponse<{ access: string }>> {
     const refreshToken = localStorage.getItem('refresh_token');
-    return this.request('/auth/refresh/', {
+    return this.request('/refresh/', {
       method: 'POST',
       body: JSON.stringify({ refresh: refreshToken }),
     });
@@ -125,11 +125,11 @@ class ApiService {
 
   // User endpoints
   async getCurrentUser(): Promise<ApiResponse<User>> {
-    return this.request('/auth/user/');
+    return this.request('/user/');
   }
 
   async updateProfile(userData: Partial<User>): Promise<ApiResponse<User>> {
-    return this.request('/auth/user/', {
+    return this.request('/user/', {
       method: 'PATCH',
       body: JSON.stringify(userData),
     });
