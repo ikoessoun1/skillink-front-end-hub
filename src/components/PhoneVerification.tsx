@@ -130,24 +130,26 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({ children }) => {
 
       const registeredNumber = await registerResponse.json();
 
-      // Activate the number
-      const activateResponse = await fetch(
-        `http://localhost:8000/api/numbers/${registeredNumber.id}/activate/`, 
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      // Check if number needs activation (only activate if not already active)
+      if (!registeredNumber.is_active) {
+        const activateResponse = await fetch(
+          `http://localhost:8000/api/numbers/${registeredNumber.id}/activate/`, 
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
-      if (!activateResponse.ok) {
-        toast({
-          title: "Activation Failed",
-          description: "Number registered but activation failed. Please contact support.",
-          variant: "destructive",
-        });
-        return;
+        if (!activateResponse.ok) {
+          toast({
+            title: "Activation Failed",
+            description: "Number registered but activation failed. Please contact support.",
+            variant: "destructive",
+          });
+          return;
+        }
       }
 
       setIsVerified(true);
