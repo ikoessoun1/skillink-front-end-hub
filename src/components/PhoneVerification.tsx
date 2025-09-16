@@ -13,6 +13,7 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({ children }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isVerified, setIsVerified] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isNotSubscribed, setIsNotSubscribed] = useState(false);
 
   // Demo phone numbers for testing
   const subscribedPhones = [
@@ -41,6 +42,7 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({ children }) => {
     }
 
     setIsLoading(true);
+    setIsNotSubscribed(false);
 
     try {
       const response = await fetch(
@@ -49,9 +51,10 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({ children }) => {
 
       if (!response.ok) {
         if (response.status === 404) {
+          setIsNotSubscribed(true);
           toast({
-            title: "Access Denied",
-            description: "This phone number is not subscribed to SkillLink service.",
+            title: "Not Subscribed",
+            description: "Sorry, your number is not subscribed to SkillLink service.",
             variant: "destructive",
           });
         } else {
@@ -91,10 +94,92 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({ children }) => {
     }
   };
 
+  const handleSubscribe = async () => {
+    if (!phoneNumber.trim()) {
+      toast({
+        title: "Phone number required",
+        description: "Please enter your phone number.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Register the new number
+      const registerResponse = await fetch(`http://localhost:8000/api/numbers/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          number: phoneNumber.trim()
+        }),
+      });
+
+      if (!registerResponse.ok) {
+        const errorData = await registerResponse.json();
+        toast({
+          title: "Subscription Failed",
+          description: errorData.detail || "Unable to subscribe this number.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const registeredNumber = await registerResponse.json();
+
+      // Activate the number
+      const activateResponse = await fetch(
+        `http://localhost:8000/api/numbers/${registeredNumber.id}/activate/`, 
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (!activateResponse.ok) {
+        toast({
+          title: "Activation Failed",
+          description: "Number registered but activation failed. Please contact support.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setIsVerified(true);
+      setIsNotSubscribed(false);
+      toast({
+        title: "Welcome to SkillLink!",
+        description: "Successfully subscribed and activated your number.",
+      });
+    } catch (error) {
+      console.error("Subscription error:", error);
+      toast({
+        title: "Network Error",
+        description: "Unable to reach the server. Please check your connection.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleButtonClick = () => {
+    if (isNotSubscribed) {
+      handleSubscribe();
+    } else {
+      handleVerifyPhone();
+    }
+  };
+
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleVerifyPhone();
+      handleButtonClick();
     }
   };
 
@@ -130,11 +215,14 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({ children }) => {
             </p>
           </div>
           <Button 
-            onClick={handleVerifyPhone} 
+            onClick={handleButtonClick} 
             className="w-full" 
             disabled={isLoading}
           >
-            {isLoading ? 'Verifying...' : 'Verify & Enter'}
+            {isLoading 
+              ? (isNotSubscribed ? 'Subscribing...' : 'Verifying...') 
+              : (isNotSubscribed ? 'Subscribe at 30 pesewas daily' : 'Verify')
+            }
           </Button>
         </CardContent>
       </Card>
