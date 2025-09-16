@@ -106,16 +106,16 @@ const Register: React.FC = () => {
 
     try {
       const userData: RegisterData = {
-        name,
+        full_name: name,
         email,
         password,
-        userType,
+        role: userType,
         phone,
         location: userLocation,
         ...(userType === 'client' 
           ? { company }
           : { 
-              category,
+              primary_category: category,
               skills: selectedSkills
             }
         )

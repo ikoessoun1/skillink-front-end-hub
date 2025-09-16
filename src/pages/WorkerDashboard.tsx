@@ -22,12 +22,12 @@ const WorkerDashboard: React.FC = () => {
     return <div>Access denied</div>;
   }
 
-  const worker = user as Worker;
-  const myJobs = getJobsByWorkerId(worker.id);
-  const myApplications = getApplicationsByWorkerId(worker.id);
+  // Use user directly instead of casting
+  const myJobs = getJobsByWorkerId(user.id);
+  const myApplications = getApplicationsByWorkerId(user.id);
   const availableJobs = mockJobs.filter(job => 
     job.status === 'open' && 
-    job.category === worker.category &&
+    job.category === user.category &&
     !myApplications.some(app => app.jobId === job.id)
   );
 
@@ -63,7 +63,7 @@ const WorkerDashboard: React.FC = () => {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
-                Hello, {worker.name}!
+                Hello, {user.name}!
               </h1>
               <p className="text-muted-foreground">
                 Check for new job requests and manage your work
@@ -102,7 +102,7 @@ const WorkerDashboard: React.FC = () => {
                   <User className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{worker.totalJobs}</div>
+                  <div className="text-2xl font-bold">{user.total_jobs || 0}</div>
                   <p className="text-xs text-muted-foreground">
                     Lifetime completed
                   </p>
@@ -116,7 +116,7 @@ const WorkerDashboard: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold flex items-center">
-                    {worker.rating}
+                    {user.rating || 0}
                     <Star className="h-5 w-5 text-yellow-400 ml-1 fill-current" />
                   </div>
                   <p className="text-xs text-muted-foreground">

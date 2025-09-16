@@ -41,44 +41,45 @@ class DemoApiService {
   async login(credentials: LoginCredentials): Promise<ApiResponse<{ user: User; access: string; refresh: string }>> {
     await this.delay(800);
     
-    const demoUser = DEMO_USERS.find(
-      u => u.email === credentials.email && 
-           u.password === credentials.password &&
-           u.userType === credentials.userType
-    );
+  const demoUser = DEMO_USERS.find(
+    u => u.email === credentials.email && 
+         u.password === credentials.password &&
+         u.userType === credentials.role
+  );
 
     if (!demoUser) {
       throw new Error('Invalid credentials');
     }
 
-    // Convert mock user to API user format
-    const user: User = {
-      id: demoUser.user.id,
-      name: demoUser.user.name,
-      email: demoUser.user.email,
-      avatar: demoUser.user.avatar,
-      type: demoUser.user.type,
-      phone: demoUser.user.phone,
-      location: demoUser.user.location,
-      createdAt: demoUser.user.createdAt,
-      // Add worker-specific fields if applicable
-      ...(demoUser.user.type === 'worker' && {
-        skills: (demoUser.user as any).skills,
-        category: (demoUser.user as any).category,
-        experience: (demoUser.user as any).experience,
-        rating: (demoUser.user as any).rating,
-        totalJobs: (demoUser.user as any).totalJobs,
-        availability: (demoUser.user as any).availability,
-        bio: (demoUser.user as any).bio,
-        certifications: (demoUser.user as any).certifications
-      }),
-      // Add client-specific fields if applicable
-      ...(demoUser.user.type === 'client' && {
-        company: (demoUser.user as any).company,
-        jobsPosted: (demoUser.user as any).jobsPosted,
-        totalSpent: (demoUser.user as any).totalSpent
-      })
-    };
+  // Convert mock user to API user format
+  const user: User = {
+    id: demoUser.user.id,
+    name: demoUser.user.name,
+    email: demoUser.user.email,
+    avatar: demoUser.user.avatar,
+    type: demoUser.user.type,
+    phone: demoUser.user.phone || '',
+    location: demoUser.user.location,
+    createdAt: demoUser.user.createdAt,
+    updatedAt: new Date().toISOString(),
+    // Add worker-specific fields if applicable
+    ...(demoUser.user.type === 'worker' && {
+      skills: (demoUser.user as any).skills,
+      category: (demoUser.user as any).category,
+      experience: (demoUser.user as any).experience,
+      rating: (demoUser.user as any).rating,
+      total_jobs: (demoUser.user as any).totalJobs,
+      availability: (demoUser.user as any).availability,
+      bio: (demoUser.user as any).bio,
+      certifications: (demoUser.user as any).certifications
+    }),
+    // Add client-specific fields if applicable
+    ...(demoUser.user.type === 'client' && {
+      company: (demoUser.user as any).company,
+      jobs_posted: (demoUser.user as any).jobsPosted,
+      total_spent: (demoUser.user as any).totalSpent
+    })
+  };
 
     return {
       data: {
@@ -94,33 +95,34 @@ class DemoApiService {
   async register(userData: RegisterData): Promise<ApiResponse<{ user: User; access: string; refresh: string }>> {
     await this.delay(1000);
     
-    // Create new user from registration data
-    const user: User = {
-      id: 'demo-' + Date.now(),
-      name: userData.name,
-      email: userData.email,
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      type: userData.userType,
-      phone: userData.phone,
-      location: userData.location,
-      createdAt: new Date().toISOString(),
-      // Add type-specific fields
-      ...(userData.userType === 'worker' && {
-        skills: userData.skills || [],
-        category: userData.category || 'General',
-        experience: 0,
-        rating: 0,
-        totalJobs: 0,
-        availability: 'available' as const,
-        bio: '',
-        certifications: []
-      }),
-      ...(userData.userType === 'client' && {
-        company: userData.company,
-        jobsPosted: 0,
-        totalSpent: 0
-      })
-    };
+  // Create new user from registration data
+  const user: User = {
+    id: 'demo-' + Date.now(),
+    name: userData.full_name,
+    email: userData.email,
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+    type: userData.role,
+    phone: userData.phone || '',
+    location: userData.location || '',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    // Add type-specific fields
+    ...(userData.role === 'worker' && {
+      skills: userData.skills || [],
+      category: userData.primary_category || 'General',
+      experience: 0,
+      rating: 0,
+      total_jobs: 0,
+      availability: 'available' as const,
+      bio: '',
+      certifications: []
+    }),
+    ...(userData.role === 'client' && {
+      company: userData.company,
+      jobs_posted: 0,
+      total_spent: 0
+    })
+  };
 
     return {
       data: {
@@ -286,24 +288,25 @@ class DemoApiService {
 
   // Workers endpoints
   async getWorkers(): Promise<ApiResponse<User[]>> {
-    const workers = mockWorkers.map(worker => ({
-      id: worker.id,
-      name: worker.name,
-      email: worker.email,
-      avatar: worker.avatar,
-      type: worker.type,
-      phone: worker.phone,
-      location: worker.location,
-      createdAt: worker.createdAt,
-      skills: worker.skills,
-      category: worker.category,
-      experience: worker.experience,
-      rating: worker.rating,
-      totalJobs: worker.totalJobs,
-      availability: worker.availability,
-      bio: worker.bio,
-      certifications: worker.certifications
-    }));
+  const workers = mockWorkers.map(worker => ({
+    id: worker.id,
+    name: worker.name,
+    email: worker.email,
+    avatar: worker.avatar,
+    type: worker.type,
+    phone: worker.phone || '',
+    location: worker.location,
+    createdAt: worker.createdAt,
+    updatedAt: new Date().toISOString(),
+    skills: worker.skills,
+    category: worker.category,
+    experience: worker.experience,
+    rating: worker.rating,
+    total_jobs: worker.totalJobs,
+    availability: worker.availability,
+    bio: worker.bio,
+    certifications: worker.certifications
+  }));
     return this.mockRequest(workers);
   }
 
@@ -318,14 +321,15 @@ class DemoApiService {
       email: worker.email,
       avatar: worker.avatar,
       type: worker.type,
-      phone: worker.phone,
+      phone: worker.phone || '',
       location: worker.location,
       createdAt: worker.createdAt,
+      updatedAt: new Date().toISOString(),
       skills: worker.skills,
       category: worker.category,
       experience: worker.experience,
       rating: worker.rating,
-      totalJobs: worker.totalJobs,
+      total_jobs: worker.totalJobs,
       availability: worker.availability,
       bio: worker.bio,
       certifications: worker.certifications

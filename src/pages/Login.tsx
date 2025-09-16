@@ -32,7 +32,7 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      const credentials: LoginCredentials = { email, password, userType };
+      const credentials: LoginCredentials = { email, password, role: userType };
       const success = await login(credentials);
       
       if (success) {

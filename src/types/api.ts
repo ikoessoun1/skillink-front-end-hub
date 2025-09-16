@@ -8,46 +8,63 @@ export interface ApiResponse<T> {
 export interface LoginCredentials {
   email: string;
   password: string;
-  userType: 'client' | 'worker';
+  role?: 'client' | 'worker';
 }
 
 export interface RegisterData {
-  name: string;
+  full_name: string;
   email: string;
   password: string;
-  userType: 'client' | 'worker';
-  location: string;
-  phone?: string;
+  phone: string;
+  role: 'client' | 'worker';
+  location?: string;
   company?: string;
+  
+  // Worker-specific fields
+  primary_category?: string;
   skills?: string[];
-  category?: string;
+  id_image?: File;
+  profile_photo?: File;
+  workshop_image1?: File;
+  workshop_image2?: File;
+  experience?: number;
+  bio?: string;
+  certifications?: string[];
+  availability?: 'available' | 'busy' | 'offline';
 }
 
 export interface User {
   id: string;
-  name: string;
+  name: string; // maps to full_name
   email: string;
-  avatar: string;
-  type: 'client' | 'worker';
+  avatar: string; // maps to profile_photo
+  type: 'client' | 'worker'; // maps to role
   phone?: string;
   location: string;
-  createdAt: string;
-  updatedAt?: string;
+  createdAt: string; // maps to date_joined
+  updatedAt?: string; // maps to updated_at
+  
+  // Common fields
+  company?: string;
   
   // Client specific fields
-  company?: string;
-  jobsPosted?: number;
-  totalSpent?: number;
+  jobs_posted?: number; // maps to jobsPosted
+  total_spent?: number; // maps to totalSpent
   
   // Worker specific fields
   skills?: string[];
-  category?: string;
+  category?: string; // maps to primary_category
   experience?: number;
   rating?: number;
-  totalJobs?: number;
+  total_jobs?: number; // maps to totalJobs
   availability?: 'available' | 'busy' | 'offline';
   bio?: string;
   certifications?: string[];
+  
+  // Additional worker images
+  id_image?: string;
+  workshop_image1?: string;
+  workshop_image2?: string;
 }
 
 export interface Job {
