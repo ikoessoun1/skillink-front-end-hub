@@ -50,7 +50,7 @@ const Register: React.FC = () => {
   // Data states
   const [locations, setLocations] = useState<{ value: string; label: string }[]>([]);
   const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
-  const [availableSkills, setAvailableSkills] = useState<string[]>([]);
+  const [availableSkills, setAvailableSkills] = useState<{ id: string; name: string }[]>([]);
 
   // Client fields  
   const [validId, setValidId] = useState<File | null>(null);
@@ -103,11 +103,18 @@ const Register: React.FC = () => {
         try {
           // Try to load skills from API
           const skillsResponse = await getSkillsByCategory(category);
-          const skillNames = skillsResponse.data.map(skill => skill.name);
-          setAvailableSkills(skillNames);
+          setAvailableSkills(skillsResponse.data.map(skill => ({
+            id: skill.id,
+            name: skill.name
+          })));
         } catch (error) {
           console.warn('Failed to load skills from API, using demo data');
-          setAvailableSkills(skillsByCategory[category] || []);
+          // Convert demo data to the expected format
+          const demoSkills = skillsByCategory[category] || [];
+          setAvailableSkills(demoSkills.map((skillName, index) => ({
+            id: `demo-${category}-${index}`,
+            name: skillName
+          })));
         }
       } else {
         setAvailableSkills([]);
@@ -139,7 +146,7 @@ const Register: React.FC = () => {
             }
           : { 
               primary_category: category,
-              skills: selectedSkills,
+              skills: selectedSkills, // These are already skill IDs
               id_image: ghanaCard,
               profile_photo: personImage,
               workshop_image1: workshopImages[0] || null,
@@ -314,13 +321,19 @@ const Register: React.FC = () => {
                       <Label>Skills (Select up to 8 skills)</Label>
                       {category && availableSkills.length > 0 ? (
                         <SkillSelector
-                          availableSkills={availableSkills}
-                          selectedSkills={selectedSkills}
-                          onSkillToggle={(skill) => {
-                            if (selectedSkills.includes(skill)) {
-                              setSelectedSkills(selectedSkills.filter(s => s !== skill));
+                          availableSkills={availableSkills.map(skill => skill.name)}
+                          selectedSkills={selectedSkills.map(skillId => {
+                            const skill = availableSkills.find(s => s.id === skillId);
+                            return skill ? skill.name : skillId;
+                          })}
+                          onSkillToggle={(skillName) => {
+                            const skill = availableSkills.find(s => s.name === skillName);
+                            if (!skill) return;
+                            
+                            if (selectedSkills.includes(skill.id)) {
+                              setSelectedSkills(selectedSkills.filter(s => s !== skill.id));
                             } else {
-                              setSelectedSkills([...selectedSkills, skill]);
+                              setSelectedSkills([...selectedSkills, skill.id]);
                             }
                           }}
                           maxSkills={8}
