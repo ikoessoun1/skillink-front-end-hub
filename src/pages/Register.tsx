@@ -48,8 +48,8 @@ const Register: React.FC = () => {
   const [availability, setAvailability] = useState<'available' | 'busy' | 'offline'>('available');
 
   // Data states
-  const [locations, setLocations] = useState(ghanaLocations);
-  const [categories, setCategories] = useState<{ id: string; name: string; icon: string; description?: string; }[]>(serviceCategories);
+  const [locations, setLocations] = useState<{ value: string; label: string }[]>([]);
+  const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
   const [availableSkills, setAvailableSkills] = useState<string[]>([]);
 
   // Client fields  
@@ -65,17 +65,31 @@ const Register: React.FC = () => {
       try {
         // Try to load locations from API
         const locationsResponse = await getLocations();
-        setLocations(locationsResponse.data);
+        const formattedLocations = locationsResponse.data.map(loc => ({
+          value: loc.id,
+          label: loc.name
+        }));
+        setLocations(formattedLocations);
       } catch (error) {
         console.warn('Failed to load locations from API, using demo data');
+        setLocations(ghanaLocations);
       }
 
       try {
         // Try to load categories from API
         const categoriesResponse = await getCategories();
-        setCategories(categoriesResponse.data);
+        const formattedCategories = categoriesResponse.data.map(cat => ({
+          value: cat.id,
+          label: cat.name
+        }));
+        setCategories(formattedCategories);
       } catch (error) {
         console.warn('Failed to load categories from API, using demo data');
+        const formattedServiceCategories = serviceCategories.map(cat => ({
+          value: cat.id,
+          label: `${cat.icon} ${cat.name}`
+        }));
+        setCategories(formattedServiceCategories);
       }
     };
 
@@ -89,7 +103,8 @@ const Register: React.FC = () => {
         try {
           // Try to load skills from API
           const skillsResponse = await getSkillsByCategory(category);
-          setAvailableSkills(skillsResponse.data);
+          const skillNames = skillsResponse.data.map(skill => skill.name);
+          setAvailableSkills(skillNames);
         } catch (error) {
           console.warn('Failed to load skills from API, using demo data');
           setAvailableSkills(skillsByCategory[category] || []);
@@ -286,10 +301,7 @@ const Register: React.FC = () => {
                     <div className="space-y-2">
                       <Label htmlFor="category">Primary Category</Label>
                       <SearchableSelect
-                        options={categories.map(cat => ({ 
-                          value: cat.id, 
-                          label: `${cat.icon} ${cat.name}` 
-                        }))}
+                        options={categories}
                         value={category}
                         onValueChange={setCategory}
                         placeholder="Select your primary trade"

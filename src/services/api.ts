@@ -1,5 +1,5 @@
 
-import { ApiResponse, LoginCredentials, RegisterData, User, Job, Application, Message } from '../types/api';
+import { ApiResponse, LoginCredentials, RegisterData, User, Job, Application, Message, Location, Category, Skill } from '../types/api';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
 
@@ -227,17 +227,17 @@ class ApiService {
   }
 
   // Locations endpoint
-  async getLocations(): Promise<ApiResponse<{ value: string; label: string }[]>> {
+  async getLocations(): Promise<ApiResponse<Location[]>> {
     return this.request('/locations/');
   }
 
   // Categories endpoint  
-  async getCategories(): Promise<ApiResponse<{ id: string; name: string; icon: string }[]>> {
+  async getCategories(): Promise<ApiResponse<Category[]>> {
     return this.request('/categories/');
   }
 
   // Skills endpoint
-  async getSkillsByCategory(categoryId: string): Promise<ApiResponse<string[]>> {
+  async getSkillsByCategory(categoryId: string): Promise<ApiResponse<Skill[]>> {
     return this.request(`/skills/?category=${categoryId}`);
   }
 }

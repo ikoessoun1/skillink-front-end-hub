@@ -104,6 +104,23 @@ export interface Message {
   isRead: boolean;
 }
 
+export interface Location {
+  id: string;
+  name: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+}
+
+export interface Skill {
+  id: string;
+  name: string;
+  category: Category;
+  category_id?: string;
+}
+
 export interface ApiError {
   message: string;
   code?: string;
