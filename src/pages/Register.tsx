@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SearchableSelect } from '@/components/ui/searchable-select';
 import { SkillSelector } from '@/components/ui/skill-selector';
+import { Textarea } from '@/components/ui/textarea';
 import Layout from '@/components/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 import { serviceCategories, ghanaLocations, skillsByCategory } from '@/data/mockData';
@@ -41,6 +42,10 @@ const Register: React.FC = () => {
   const [ghanaCard, setGhanaCard] = useState<File | null>(null);
   const [personImage, setPersonImage] = useState<File | null>(null);
   const [workshopImages, setWorkshopImages] = useState<File[]>([]);
+  const [experience, setExperience] = useState('');
+  const [bio, setBio] = useState('');
+  const [certifications, setCertifications] = useState<string[]>([]);
+  const [availability, setAvailability] = useState<'available' | 'busy' | 'offline'>('available');
 
   // Data states
   const [locations, setLocations] = useState(ghanaLocations);
@@ -113,10 +118,21 @@ const Register: React.FC = () => {
         phone,
         location: userLocation,
         ...(userType === 'client' 
-          ? { company }
+          ? { 
+              company,
+              id_image: validId 
+            }
           : { 
               primary_category: category,
-              skills: selectedSkills
+              skills: selectedSkills,
+              id_image: ghanaCard,
+              profile_photo: personImage,
+              workshop_image1: workshopImages[0] || null,
+              workshop_image2: workshopImages[1] || null,
+              experience: experience ? parseInt(experience) : undefined,
+              bio: bio || undefined,
+              certifications,
+              availability
             }
         )
       };
@@ -327,16 +343,65 @@ const Register: React.FC = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="workshopImages">Workshop Images (3 photos)</Label>
+                      <Label htmlFor="workshopImages">Workshop Images (up to 2 photos)</Label>
                       <Input
                         id="workshopImages"
                         type="file"
                         accept="image/*"
                         multiple
-                        onChange={(e) => setWorkshopImages(Array.from(e.target.files || []).slice(0, 3))}
+                        onChange={(e) => setWorkshopImages(Array.from(e.target.files || []).slice(0, 2))}
                         required
                       />
-                      <p className="text-xs text-muted-foreground">Upload up to 3 images of your work</p>
+                      <p className="text-xs text-muted-foreground">Upload up to 2 images of your work</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="experience">Years of Experience</Label>
+                      <Input
+                        id="experience"
+                        type="number"
+                        min="0"
+                        max="50"
+                        value={experience}
+                        onChange={(e) => setExperience(e.target.value)}
+                        placeholder="Enter years of experience"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="bio">Bio</Label>
+                      <Textarea
+                        id="bio"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                        placeholder="Tell us about yourself and your work..."
+                        className="min-h-[100px]"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="certifications">Certifications (Optional)</Label>
+                      <Textarea
+                        id="certifications"
+                        value={certifications.join(', ')}
+                        onChange={(e) => setCertifications(e.target.value.split(',').map(cert => cert.trim()).filter(cert => cert))}
+                        placeholder="List your certifications separated by commas..."
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="availability">Availability</Label>
+                      <SearchableSelect
+                        options={[
+                          { value: 'available', label: 'Available' },
+                          { value: 'busy', label: 'Busy' },
+                          { value: 'offline', label: 'Offline' }
+                        ]}
+                        value={availability}
+                        onValueChange={(value) => setAvailability(value as 'available' | 'busy' | 'offline')}
+                        placeholder="Select your availability"
+                      />
                     </div>
                   </TabsContent>
 
